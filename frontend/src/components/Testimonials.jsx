@@ -3,58 +3,63 @@ import { Star, Quote } from 'lucide-react';
 
 const testimonials = [
   {
-    name: "Alexander Chen",
-    role: "CEO, Neural Technologies",
-    quote: "VISN transformed our cloud platform into an immersive digital experience. Their attention to micro-interactions is unmatched.",
+    name: "SN Enterprise",
+    role: "Client",
+    quote: "The new website has made it much easier for retailers and franchise partners to explore our catalogue and reach out to us. The process was smooth from start to finish.",
     rating: 5,
   },
   {
-    name: "Sofia Morales",
-    role: "Creative Director, Eclipse Holdings",
-    quote: "Working with VISN felt like collaborating with artists who code. They delivered a campaign system that exceeded every metric.",
+    name: "Aadi Shakti",
+    role: "Client",
+    quote: "Our work is now presented in a much clearer way. The website helps people understand our initiatives and makes it easier to connect with us.",
     rating: 5,
   },
   {
-    name: "James Whitfield",
-    role: "Founder, CyberDock Protocol",
-    quote: "The visual explorer they built for our Web3 platform is a masterpiece. Users spend 4x longer exploring transactions now.",
+    name: "Blockscroll",
+    role: "Client",
+    quote: "From the app to the website, every screen was thoughtfully designed. The overall experience feels intuitive and aligns perfectly with our product.",
     rating: 5,
   },
   {
-    name: "Aria Nakamura",
-    role: "Head of Digital, Kinetic Art Gallery",
-    quote: "They bridged the gap between physical art and digital interaction flawlessly. Our exhibit attendance doubled after launch.",
+    name: "Healthy Eats Co.",
+    role: "Client",
+    quote: "The layouts are simple, fresh, and easy to browse. We've received great feedback on how effortless it is to explore our menu.",
     rating: 5,
   },
   {
-    name: "Marcus Webb",
-    role: "VP Product, Stratos Finance",
-    quote: "VISN doesn't just build websites — they engineer digital environments that make your brand feel alive and unforgettable.",
+    name: "iDream",
+    role: "Client",
+    quote: "From campaign planning to website improvements, he approached every task with ownership and attention to detail. His inputs added real value to our marketing initiatives.",
     rating: 5,
   },
   {
-    name: "Elena Petrova",
-    role: "Marketing Lead, Aether Studios",
-    quote: "The scroll animations and typographic systems they designed gave our brand a premium identity we never thought possible.",
+    name: "AirM",
+    role: "Client",
+    quote: "Visn was proactive throughout the internship and never hesitated to take responsibility. His ability to balance creativity with practical execution stood out.",
     rating: 5,
   },
   {
-    name: "David Okonkwo",
-    role: "CTO, Helix Robotics",
-    quote: "Performance and aesthetics rarely coexist at this level. VISN delivered both with a 99 Lighthouse score and jaw-dropping visuals.",
+    name: "The Music Room",
+    role: "Client",
+    quote: "He handled outreach with professionalism and consistently came up with thoughtful ideas to improve engagement. We appreciated his initiative throughout the project.",
     rating: 5,
   },
   {
-    name: "Lena Schröder",
-    role: "Brand Strategist, Meridian Labs",
-    quote: "Every pixel feels intentional. VISN's design philosophy elevated our entire digital presence beyond what we imagined.",
+    name: "Alokya",
+    role: "Client",
+    quote: "His strategic thinking and willingness to experiment with new approaches made him a valuable addition to the team. He was dependable and easy to collaborate with.",
+    rating: 5,
+  },
+  {
+    name: "Flixdin",
+    role: "Client",
+    quote: "visn was always willing to take initiative and contributed beyond his assigned responsibilities. His enthusiasm and problem solving mindset stood out.",
     rating: 5,
   },
 ];
 
-const TestimonialCard = ({ testimonial }) => (
-  <div className="testimonial-card shrink-0 w-[340px] md:w-[400px] p-6 md:p-8 rounded-2xl border border-obsidian/8 bg-dark-card/50 backdrop-blur-sm select-none">
-    {/* Quote icon */}
+const TestimonialCard = ({ testimonial, index }) => (
+  <div className={`testimonial-card shrink-0 w-[280px] md:w-[400px] p-6 md:p-8 rounded-2xl border border-white/10 ${index % 2 === 0 ? 'bg-[#111111]' : 'bg-[#1A1A1A]'} backdrop-blur-sm select-none`}>
     <div className="flex items-center justify-between mb-4">
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-gold/10 border border-accent-gold/15">
         <Quote className="h-3.5 w-3.5 text-accent-gold-dark" />
@@ -66,71 +71,72 @@ const TestimonialCard = ({ testimonial }) => (
       </div>
     </div>
 
-    {/* Quote text */}
-    <p className="text-xs md:text-sm text-obsidian/75 font-serif italic font-light leading-relaxed mb-6 whitespace-normal">
+    <p className="text-xs md:text-sm text-white/75 font-serif italic font-light leading-relaxed mb-6 whitespace-normal">
       "{testimonial.quote}"
     </p>
 
-    {/* Author */}
-    <div className="flex items-center gap-3 border-t border-obsidian/8 pt-4">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-obsidian/5 border border-obsidian/10">
-        <span className="text-[11px] font-bold text-obsidian/60">
+    <div className="flex items-center gap-3 border-t border-white/10 pt-4">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 border border-white/10">
+        <span className="text-[11px] font-bold text-white/60">
           {testimonial.name.split(' ').map(n => n[0]).join('')}
         </span>
       </div>
       <div>
-        <p className="text-xs font-bold text-obsidian tracking-wide">{testimonial.name}</p>
-        <p className="text-[9px] text-obsidian/45 tracking-wider uppercase">{testimonial.role}</p>
+        <p className="text-xs font-bold text-white tracking-wide">{testimonial.name}</p>
+        <p className="text-[9px] text-white/45 tracking-wider uppercase">{testimonial.role}</p>
       </div>
     </div>
   </div>
 );
 
 const Testimonials = () => {
-  // Duplicate testimonials for seamless looping
   const row1 = testimonials.slice(0, 4);
   const row2 = testimonials.slice(4, 8);
 
   return (
-    <section
-      id="testimonials"
-      className="relative w-full py-24 md:py-32 bg-transparent overflow-hidden z-10"
-    >
-      {/* Background accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[400px] w-[400px] rounded-full bg-accent-gold/4 blur-[120px] pointer-events-none" />
-
-      {/* Section header */}
-      <div className="mx-auto max-w-6xl px-6 md:px-12 mb-16 select-none">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent-gold shadow-[0_0_6px_#B59B75]" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian/50">
-            TESTIMONIALS
-          </h2>
+    <>
+      <section
+        id="testimonials"
+        className="relative w-full py-24 md:py-32 bg-[#0A0A0A] z-10"
+        style={{ isolation: 'isolate', contain: 'paint layout' }}
+      >
+        {/* Section header */}
+        <div className="mx-auto max-w-6xl px-6 md:px-12 mb-16 select-none">
+          <div className="text-center flex flex-col items-center justify-center">
+            <h2
+              className="font-sans font-bold text-center text-white leading-tight uppercase tracking-[0.15em]"
+              style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3rem)' }}
+            >
+              What Clients Say<span className="text-[#26CCC2]">.</span>
+            </h2>
+            <h3 className="font-serif text-lg md:text-2xl text-[#26CCC2] font-medium mt-4 mb-4 max-w-2xl mx-auto leading-tight">
+              Testimonials
+            </h3>
+          </div>
         </div>
-        <h3 className="text-3xl md:text-5xl font-serif font-bold leading-tight uppercase text-obsidian">
-          WHAT CLIENTS <br />
-          <span className="text-accent-gold italic font-normal">SAY</span>
-        </h3>
-      </div>
 
-      {/* Row 1 — moves left */}
-      <div className="mb-6 overflow-hidden">
-        <div className="testimonial-row-left flex gap-6 w-max">
-          {[...row1, ...row1, ...row1, ...row1].map((t, i) => (
-            <TestimonialCard key={`r1-${i}`} testimonial={t} />
-          ))}
+        {/* Row 1 — moves left */}
+        <div className="mb-6 overflow-hidden">
+          <div className="testimonial-row-left flex gap-6 w-max">
+            {[...row1, ...row1, ...row1, ...row1].map((t, i) => (
+              <TestimonialCard key={`r1-${i}`} testimonial={t} index={i} />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Row 2 — moves right */}
-      <div className="overflow-hidden">
-        <div className="testimonial-row-right flex gap-6 w-max">
-          {[...row2, ...row2, ...row2, ...row2].map((t, i) => (
-            <TestimonialCard key={`r2-${i}`} testimonial={t} />
-          ))}
+        {/* Row 2 — moves right */}
+        <div className="overflow-hidden">
+          <div className="testimonial-row-right flex gap-6 w-max">
+            {[...row2, ...row2, ...row2, ...row2].map((t, i) => (
+              <TestimonialCard key={`r2-${i}`} testimonial={t} index={i} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Hard seal — zero-height block that resets stacking context */}
+      <div style={{ display: 'block', height: 0, overflow: 'hidden', clear: 'both', background: 'transparent' }} />
+    </>
   );
 };
 

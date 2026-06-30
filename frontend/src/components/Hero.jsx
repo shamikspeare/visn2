@@ -1,173 +1,214 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Magnetic from './Magnetic';
-import { ArrowDownRight } from 'lucide-react';
+import AnimatedGradientBackground from './AnimatedGradientBackground';
+
+// slideFrom: 'left' | 'right'
+const bentoItems = [
+  {
+    id: 1,
+    title: "Web Development",
+    description: "Scalable apps designed around your business and your users.",
+    image: "/images/web-dev.png",
+    className: "md:col-span-2 h-[350px]",
+    imagePosition: "object-top",
+    slideFrom: "left",
+  },
+  {
+    id: 2,
+    title: "App Development",
+    description: "Custom applications built for seamless user experiences.",
+    image: "/images/app-dev.png",
+    className: "md:col-span-1 h-[350px]",
+    imagePosition: "object-center",
+    slideFrom: "right",
+  },
+  {
+    id: 3,
+    title: "Branding",
+    description: "Create a brand people recognize, remember, and trust.",
+    image: "/images/branding.png",
+    className: "md:col-span-1 h-[350px]",
+    imagePosition: "object-center",
+    slideFrom: "left",
+  },
+  {
+    id: 4,
+    title: "Marketing",
+    description: "Reach the right audience and convert more customers",
+    image: "/images/marketing.png",
+    className: "md:col-span-2 h-[350px]",
+    imagePosition: "object-[85%_155%]",
+    imageScale: "scale-[1.03] group-hover:scale-[1.08]",
+    slideFrom: "right",
+  }
+];
+
+const BentoCard = ({ item, cardRef }) => {
+  return (
+    <div
+      ref={cardRef}
+      className={`group relative overflow-hidden bg-[#111111] transition-all duration-500 rounded-3xl shadow-2xl select-none cursor-pointer ${item.className}`}
+    >
+      {/* Background Image */}
+      <img
+        src={item.image}
+        alt={item.title}
+        className={`absolute inset-0 w-full h-full object-cover transition-transform duration-700 z-0 ${item.imageScale || 'group-hover:scale-105'} ${item.imagePosition || ''}`}
+      />
+
+      {/* Text Overlay at the Bottom */}
+      <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 pt-24 md:pt-32 bg-gradient-to-t from-black via-black/90 to-transparent flex flex-col justify-end z-10 transition-all duration-500 rounded-b-3xl">
+        <h4 className="text-xl md:text-2xl font-sans font-bold text-white uppercase tracking-wide mb-2">
+          {item.title}
+        </h4>
+        <p className="text-xs md:text-sm text-gray-200 font-sans leading-relaxed max-w-lg">
+          {item.description}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
-const splitLetters = (text, className = "") => {
-  return text.split("").map((char, index) => (
-    <span 
-      key={index} 
-      className={`char-span inline-block ${className}`}
-      style={{ 
-        display: char === " " ? "inline" : "inline-block",
-        transformOrigin: "center center 20px"
-      }}
-    >
-      {char === " " ? "\u00A0" : char}
-    </span>
-  ));
-};
-
 const Hero = ({ isLoaded }) => {
-  const scrollWrapperRef = useRef(null);      // h-[280vh] wrapper
-  const pinContainerRef = useRef(null);       // h-screen relative pinned
-  const heroSlideRef = useRef(null);          // Hero section z-10
-  const transitionSlideRef = useRef(null);    // Transition section z-20 y-full
-  const clipCardRef = useRef(null);           // Card container inside transition section
-  const transitionImgRef = useRef(null);      // Image inside card
-  const transitionTextRef = useRef(null);     // Text overlay inside card
+  const scrollWrapperRef = useRef(null);
+  const pinContainerRef = useRef(null);
+  const overlayRef = useRef(null);
+  const wwbLayerRef = useRef(null);
 
-  // Hero refs for entrance animation
-  const brandTitleRef = useRef(null);
-  const tagLineRef = useRef(null);
-  const subtitleRef = useRef(null);
+  // Hero content refs for entrance animation
+  const headlineRef = useRef(null);
+  const subheadRef = useRef(null);
+  const bodyRef = useRef(null);
   const ctaRef = useRef(null);
-  const badgeRef = useRef(null);
-  const scrollIndicatorRef = useRef(null);
+
+  // Stats refs
+  const statsContainerRef = useRef(null);
+  const count1Ref = useRef(null);
+  const count2Ref = useRef(null);
+  const count3Ref = useRef(null);
+  const count4Ref = useRef(null);
+
+  // WWB section refs
+  const wwbHeadingRef = useRef(null);
+  const bentoCard1Ref = useRef(null);
+  const bentoCard2Ref = useRef(null);
+  const bentoCard3Ref = useRef(null);
+  const bentoCard4Ref = useRef(null);
 
   // 1. Entrance animation (runs once on load)
   useEffect(() => {
     if (!isLoaded) return;
 
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    const brandChars = brandTitleRef.current.querySelectorAll('.char-span');
-    const tagChars = tagLineRef.current.querySelectorAll('.char-span');
+    gsap.set(headlineRef.current, { opacity: 0, y: 48 });
+    gsap.set(subheadRef.current, { opacity: 0, y: 32 });
+    gsap.set(bodyRef.current, { opacity: 0, y: 24 });
+    gsap.set(ctaRef.current, { opacity: 0, y: 20 });
 
-    // Initial starting states for Hero elements
-    gsap.set(brandChars, { 
-      y: "140%", 
-      rotateX: -70,
-      scale: 0.8,
-      opacity: 0 
-    });
-    gsap.set(tagChars, { 
-      y: "100%", 
-      opacity: 0 
-    });
-    gsap.set(subtitleRef.current, { opacity: 0, y: 20 });
-    gsap.set(ctaRef.current, { scale: 0.8, opacity: 0 });
-    gsap.set(badgeRef.current, { opacity: 0, y: -20 });
-    gsap.set(scrollIndicatorRef.current, { opacity: 0, y: 20 });
-
-    tl.to(badgeRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out",
-      delay: 0.15
-    })
-    .to(brandChars, {
-      y: "0%",
-      rotateX: 0,
-      scale: 1,
-      opacity: 1,
-      duration: 1.45,
-      stagger: 0.08,
-      ease: "power4.out"
-    }, "-=0.6")
-    .to(tagLineRef.current, {
-      opacity: 1,
-      duration: 0.5
-    }, "-=0.9")
-    .to(tagChars, {
-      y: "0%",
-      opacity: 1,
-      duration: 0.85,
-      stagger: 0.02,
-      ease: "power3.out"
-    }, "-=0.85")
-    .to(subtitleRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.9,
-      ease: "power3.out"
-    }, "-=0.65")
-    .to(ctaRef.current, {
-      scale: 1,
-      opacity: 1,
-      duration: 0.65,
-      ease: "back.out(1.5)"
-    }, "-=0.5")
-    .to(scrollIndicatorRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      ease: "power3.out"
-    }, "-=0.4");
+    tl
+      .to(headlineRef.current, { opacity: 1, y: 0, duration: 1.1 }, 0.1)
+      .to(subheadRef.current, { opacity: 1, y: 0, duration: 0.95 }, '-=0.7')
+      .to(bodyRef.current, { opacity: 1, y: 0, duration: 0.85 }, '-=0.65')
+      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.75 }, '-=0.55');
 
   }, [isLoaded]);
 
-  // 2. Scroll-triggered timeline (scrubbed coordinated page-up and clip-zoom)
+  // 2. Scroll timeline: black circle expands → WWB content animates in
   useEffect(() => {
     if (!isLoaded) return;
 
     const wrapper = scrollWrapperRef.current;
     const pinContainer = pinContainerRef.current;
-    const transitionSlide = transitionSlideRef.current;
-    const clipCard = clipCardRef.current;
-    const transitionImg = transitionImgRef.current;
-    const textEl = transitionTextRef.current;
+    const overlay = overlayRef.current;
+    const wwbLayer = wwbLayerRef.current;
 
-    if (!wrapper || !pinContainer || !transitionSlide || !clipCard || !transitionImg || !textEl) return;
+    if (!wrapper || !pinContainer || !overlay || !wwbLayer) return;
 
-    const fadeItems = textEl.querySelectorAll('.fade-item');
+    // Pre-set WWB layer and all its children to hidden start states
+    gsap.set(wwbLayer, { autoAlpha: 0 });
+    gsap.set(wwbHeadingRef.current, { opacity: 0, y: 40 });
+    gsap.set(bentoCard1Ref.current, { opacity: 0, x: -60 });
+    gsap.set(bentoCard2Ref.current, { opacity: 0, x: 60 });
+    gsap.set(bentoCard3Ref.current, { opacity: 0, x: -60 });
+    gsap.set(bentoCard4Ref.current, { opacity: 0, x: 60 });
 
-    // Create coordinated timeline using ScrollTrigger pin
+    // WWB content entrance — fires after the layer fades in
+    const fireWWBEntrance = () => {
+      const entryTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      // Heading pops up first
+      entryTl.to(wwbHeadingRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+      });
+
+      // Top row cards slide in together, slight stagger
+      entryTl.to(
+        [bentoCard1Ref.current, bentoCard2Ref.current],
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.7,
+          stagger: 0.08,
+        },
+        '-=0.35'
+      );
+
+      // Bottom row cards slide in together, slight stagger
+      entryTl.to(
+        [bentoCard3Ref.current, bentoCard4Ref.current],
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.7,
+          stagger: 0.08,
+        },
+        '-=0.45'
+      );
+    };
+
+    let entranceFired = false;
+
     const scrollTl = gsap.timeline({
       scrollTrigger: {
         trigger: wrapper,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1.5,
+        start: '1px top',
+        end: '+=80%', // Reduced scroll distance for faster transition
+        scrub: 1, // Smooth scrubbing
         pin: pinContainer,
         pinSpacing: true,
+        onUpdate: (self) => {
+          // Fire the entrance animation as soon as the screen starts turning black
+          // without waiting for the user to finish scrolling
+          if (self.progress > 0.5 && !entranceFired) {
+            entranceFired = true;
+            fireWWBEntrance();
+          }
+        }
       }
     });
 
-    // Phase 1: Slide-up the transition panel over the Hero
-    scrollTl.fromTo(transitionSlide, 
-      { y: '100%' },
-      { y: '0%', ease: 'none', duration: 1, force3D: true }
+    // Phase 1: Expand black circle to completely cover screen
+    scrollTl.fromTo(overlay,
+      { scale: 0 },
+      { scale: 2.5, ease: 'power2.inOut', duration: 1 }
     );
 
-    // Phase 2: Zoom in the clip-card (inset card to full-screen)
-    scrollTl.fromTo(clipCard, 
-      { clipPath: 'inset(18% 22% 18% 22% round 24px)' },
-      {
-        clipPath: 'inset(0% 0% 0% 0% round 0px)',
-        ease: 'none',
-        duration: 1
-      }, 
-      '+=0.05'
-    );
+    // Phase 2: Fade in WhatWeBuild layer
+    scrollTl.to(wwbLayer, {
+      autoAlpha: 1,
+      duration: 0.5,
+    }, "-=0.3"); // Overlap the fade in with the circle expansion
 
-    // Counter-scale the image simultaneously with card zoom (parallax)
-    scrollTl.fromTo(transitionImg, 
-      { scale: 1.25 },
-      { scale: 1.0, ease: 'none', duration: 1, force3D: true },
-      '<'
-    ); 
-
-    // Stagger fade-in the text overlays near the end of zoom
-    scrollTl.fromTo(fadeItems,
-      { opacity: 0, y: 35 },
-      { opacity: 1, y: 0, stagger: 0.1, ease: 'power2.out', duration: 0.6, force3D: true },
-      '-=0.45' 
-    );
 
     return () => {
       if (scrollTl.scrollTrigger) scrollTl.scrollTrigger.kill();
@@ -175,171 +216,290 @@ const Hero = ({ isLoaded }) => {
     };
   }, [isLoaded]);
 
-  const handleScrollClick = (e) => {
+  // 3. Stats counter animation
+  useEffect(() => {
+    if (!isLoaded || !statsContainerRef.current) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        gsap.to(count1Ref.current, { innerHTML: 10, duration: 0.8, snap: { innerHTML: 1 }, ease: 'power2.out' });
+        gsap.to(count2Ref.current, { innerHTML: 7, duration: 0.8, snap: { innerHTML: 1 }, ease: 'power2.out' });
+        gsap.to(count3Ref.current, { innerHTML: 10, duration: 0.8, snap: { innerHTML: 1 }, ease: 'power2.out' });
+        gsap.to(count4Ref.current, { innerHTML: 100, duration: 0.8, snap: { innerHTML: 1 }, ease: 'power2.out' });
+        observer.disconnect();
+      }
+    }, { threshold: 0.3 });
+
+    observer.observe(statsContainerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [isLoaded]);
+
+  const handleScrollClick = (e, href) => {
     e.preventDefault();
-    const target = document.querySelector('#contact');
+    const target = document.querySelector(href);
     if (target && window.lenis) {
       window.lenis.scrollTo(target, { offset: -60, duration: 1.8 });
     }
   };
 
+  const bentoRefs = [bentoCard1Ref, bentoCard2Ref, bentoCard3Ref, bentoCard4Ref];
+
   return (
-    <div 
+    <div
       ref={scrollWrapperRef}
       id="hero"
-      className="relative w-full h-[280vh] bg-transparent"
+      className="relative w-full bg-[#0A0A0A]"
     >
       {/* Viewport Pinned Box */}
-      <div 
+      <div
         ref={pinContainerRef}
-        className="w-full h-screen overflow-hidden relative"
+        className="w-full relative"
       >
-        
-        {/* Layer 1: The Centered Hero Slide (z-10) */}
-        <div 
-          ref={heroSlideRef}
-          className="absolute inset-0 flex flex-col justify-between px-6 pt-36 pb-12 md:px-12 bg-transparent z-10"
+        {/* Static Hero slide content */}
+        <div
+          className="relative w-full h-screen z-10 flex flex-col justify-center overflow-hidden"
+          style={{ background: '#0A0A0A' }}
         >
-          {/* Champagne Glow */}
-          <div className="absolute top-1/2 left-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-gold/5 blur-[130px] pointer-events-none" />
-          {/* Grid background */}
-          <div className="absolute inset-0 -z-20 bg-grid-pattern opacity-45 pointer-events-none" />
+          {/* Animated gradient background */}
+          <AnimatedGradientBackground
+            Breathing={true}
+            animationSpeed={0.01}
+            breathingRange={5}
+            gradientColors={[
+              '#0A0A0A',
+              '#450693',
+              '#5B23FF',
+              '#0A0A0A',
+            ]}
+            gradientStops={[30, 55, 75, 100]}
+            gradientOrigin="50% 20%"
+          />
 
-          {/* Top Row */}
-          <div ref={badgeRef} className="w-full flex justify-center items-center">
-            <div className="flex items-center gap-3 px-4 py-1.5 rounded-full border border-obsidian/5 bg-obsidian/1">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-accent-gold shadow-[0_0_6px_#B59B75] animate-pulse" />
-              <span className="text-[9px] font-bold tracking-[0.32em] text-obsidian/60 uppercase select-none">
-                VISN STUDIO // EDITION 2026
-              </span>
-            </div>
-          </div>
+          {/* Hero center content */}
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-6 select-none relative" style={{ zIndex: 1 }}>
 
-          {/* Symmetrical Typography */}
-          <div className="my-auto max-w-4xl mx-auto flex flex-col items-center text-center select-none">
-            <div ref={tagLineRef} className="overflow-hidden mb-4 opacity-0">
-              <span className="text-[10px] md:text-xs font-sans font-bold tracking-[0.4em] uppercase text-accent-gold">
-                {splitLetters("CREATIVE DIRECTION & HIGH-END ENGINEERING")}
-              </span>
-            </div>
-
-            <div className="overflow-hidden mb-6" style={{ perspective: "1200px" }}>
-              <h1 
-                ref={brandTitleRef}
-                className="text-[18vw] sm:text-[15vw] md:text-[12vw] font-serif font-black leading-[0.8] tracking-wider uppercase text-obsidian select-none"
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                {splitLetters("VISN")}
-              </h1>
-            </div>
-
-            <p 
-              ref={subtitleRef}
-              className="max-w-2xl text-lg md:text-xl lg:text-2xl leading-relaxed text-obsidian/75 font-serif italic font-light tracking-wide px-4"
+            <h1
+              ref={headlineRef}
+              className="font-sans font-bold leading-[1.05] tracking-[0.25em] mb-5 flex items-baseline justify-center"
+              style={{
+                fontSize: 'clamp(3.5rem, 8vw, 8rem)',
+                color: '#ffffff',
+              }}
             >
-              We translate complex logic into graceful digital experiences, custom high-performance interfaces, and branding systems that elevate products into pieces of luxury.
+              VISN
+              <span className="text-[#26CCC2] ml-2" style={{ fontSize: 'clamp(3.5rem, 8vw, 8rem)' }}>.</span>
+            </h1>
+
+            {/* ── Sub-heading ── */}
+            <p
+              ref={subheadRef}
+              className="font-serif mb-7"
+              style={{
+                fontSize: 'clamp(1.5rem, 3.5vw, 3rem)',
+                color: '#ffffff',
+                letterSpacing: '0.01em',
+              }}
+            >
+              Digital Experiences That Grow<span className="text-[#26CCC2]">.</span>
             </p>
 
-            <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-3">
-              <Magnetic strength={0.25} range={55}>
-                <a 
-                  href="#contact"
-                  onClick={handleScrollClick}
-                  className="group flex h-16 w-16 items-center justify-center rounded-full bg-obsidian text-dark-bg hover:bg-accent-gold hover:text-white hover:shadow-[0_10px_25px_rgba(181,155,117,0.35)] transition-all duration-300 cursor-none"
-                  data-cursor="magnetic"
-                >
-                  <ArrowDownRight className="h-6 w-6 group-hover:rotate-45 transition-transform duration-300" />
-                </a>
-              </Magnetic>
-              <span className="text-[9px] font-bold tracking-[0.25em] uppercase text-obsidian/50">
-                Start a Project
-              </span>
-            </div>
-          </div>
-
-          {/* Bottom Row */}
-          <div 
-            ref={scrollIndicatorRef}
-            className="flex w-full flex-col md:flex-row items-center justify-between gap-6 border-t border-obsidian/10 pt-8 max-w-6xl mx-auto"
-          >
-            <div className="flex justify-center gap-16 text-obsidian/50 select-none text-center md:text-left">
-              <div>
-                <p className="text-[9px] font-bold tracking-widest text-obsidian/40 uppercase">Focus Area</p>
-                <p className="text-xs font-semibold text-obsidian mt-1 font-serif italic">Digital Engineering & Art</p>
-              </div>
-              <div>
-                <p className="text-[9px] font-bold tracking-widest text-obsidian/40 uppercase">Awards</p>
-                <p className="text-xs font-semibold text-obsidian mt-1 font-serif italic">CSS Design nominee '26</p>
-              </div>
-            </div>
-
-            <a 
-              href="#manifesto"
-              onClick={handleScrollClick}
-              className="group flex items-center gap-3 text-[10px] font-bold tracking-[0.3em] uppercase text-obsidian/50 hover:text-accent-gold-dark transition-colors cursor-none"
+            {/* ── Body copy ── */}
+            <p
+              ref={bodyRef}
+              className="max-w-lg leading-relaxed mb-12 font-sans"
+              style={{
+                fontSize: 'clamp(0.95rem, 1.2vw, 1.15rem)',
+                color: 'rgba(255,255,255,0.65)',
+                lineHeight: 1.6,
+              }}
             >
-              SCROLL TO DISCOVER
-              <span className="inline-block animate-bounce text-accent-gold-dark font-black">↓</span>
-            </a>
+              We build fast, beautiful, and effective<br />digital solutions for ambitious brands.
+            </p>
+
+            {/* ── CTA Buttons ── */}
+            <div ref={ctaRef} className="flex flex-wrap items-center justify-center gap-5">
+
+              {/* Primary — teal base, dark sweep on hover */}
+              <Magnetic strength={0.2} range={50}>
+                <motion.a
+                  href="mailto:gshamik14@gmail.com"
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={{
+                    initial: { scale: 1 },
+                    tap: { scale: 0.95 },
+                  }}
+                  data-cursor="magnetic"
+                  className="group relative overflow-hidden z-10 w-[18em] h-[4.5em] rounded-[30em] font-sans text-[14px] font-bold uppercase tracking-[0.15em] border-none outline-none text-black bg-[#26CCC2] cursor-none flex items-center justify-center gap-3 transition-colors duration-500 before:content-[''] before:absolute before:-top-1 before:-left-1 before:w-0 before:h-[calc(100%+8px)] before:bg-[#151515] before:transition-all before:duration-500 before:ease-in-out before:-z-10 hover:before:w-[calc(100%+8px)] hover:text-white"
+                >
+                  <span>Book a Meeting</span>
+                  <motion.div
+                    variants={{
+                      initial: { x: 0 },
+                      hover: { x: 8 },
+                    }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </motion.a>
+              </Magnetic>
+
+              {/* Secondary — dark base, teal sweep on hover */}
+              <Magnetic strength={0.2} range={50}>
+                <Link to="/work" onClick={() => window.scrollTo(0, 0)}>
+                  <motion.div
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={{
+                      initial: { scale: 1 },
+                      tap: { scale: 0.95 },
+                    }}
+                    data-cursor="magnetic"
+                    className="group relative overflow-hidden z-10 w-[18em] h-[4.5em] rounded-[30em] font-sans text-[14px] font-bold uppercase tracking-[0.15em] border-none outline-none text-white bg-[#151515] cursor-none flex items-center justify-center gap-3 transition-colors duration-500 before:content-[''] before:absolute before:-top-1 before:-left-1 before:w-0 before:h-[calc(100%+8px)] before:bg-[#26CCC2] before:transition-all before:duration-500 before:ease-in-out before:-z-10 hover:before:w-[calc(100%+8px)] hover:text-black"
+                  >
+                    <span>Explore Our Work</span>
+                    <motion.div
+                      variants={{
+                        initial: { x: 0 },
+                        hover: { x: 8 },
+                      }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.div>
+                  </motion.div>
+                </Link>
+              </Magnetic>
+
+            </div>
           </div>
         </div>
 
-        {/* Layer 2: The Transition Zoom Slide (z-20) */}
-        <div 
-          ref={transitionSlideRef}
-          className="absolute inset-0 z-20 bg-dark-bg overflow-hidden"
-          style={{ 
-            transform: 'translateY(100%)',
-            willChange: 'transform' 
+        {/* Black expanding circle overlay — originates from top-center */}
+        <div
+          ref={overlayRef}
+          className="absolute rounded-full pointer-events-none z-20"
+          style={{
+            width: '280vmax',
+            height: '280vmax',
+            left: '50%',
+            top: '0%',
+            transform: 'translate(-50%, -50%) scale(0)',
+            transformOrigin: 'center center',
+            background: 'radial-gradient(circle, #0A0A0A 0%, #0A0A0A 55%, rgba(10,10,10,0.6) 75%, transparent 100%)',
+            filter: 'blur(60px)',
+            willChange: 'transform',
           }}
+        />
+
+        {/* WhatWeBuild Fade-in Layer */}
+        <div
+          ref={wwbLayerRef}
+          className="relative w-full z-30 block bg-[#0A0A0A]"
+          style={{ marginTop: '-100vh', visibility: 'hidden', opacity: 0 }}
         >
-          {/* Subtle grid pattern inside transition container */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
-
-          {/* Card shadow wrapper using filter to follow clip-path shape */}
-          <div className="absolute inset-0 w-full h-full filter drop-shadow-[0_22px_50px_rgba(21,21,21,0.14)]">
-            {/* Centered card that expands via clip-path */}
-            <div 
-              ref={clipCardRef}
-              className="absolute inset-0 w-full h-full overflow-hidden"
-              style={{ 
-                clipPath: 'inset(18% 22% 18% 22% round 24px)',
-                willChange: 'clip-path'
+          <section className="bg-[#0A0A0A] w-full pt-[calc(50vh-8.9rem)] md:pt-[calc(50vh-12.4rem)] pb-28 relative z-20" id="what-we-build">
+            {/* Static dots background */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-50 z-30"
+              style={{
+                backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.15) 3px, transparent 3px)',
+                backgroundSize: '80px 80px',
               }}
-            >
-              {/* Transition Image asset - fits full screen perfectly, no layout shifts */}
-              <img 
-                ref={transitionImgRef}
-                src="/hero-transition.png" 
-                alt="VISN Transition" 
-                className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-                style={{ 
-                  transform: 'scale(1.25)',
-                  transformOrigin: 'center center',
-                  willChange: 'transform'
-                }}
-              />
+            />
+            <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-40">
 
-              {/* Scrim Overlay */}
-              <div className="absolute inset-0 bg-obsidian/30 mix-blend-multiply z-10" />
-
-              {/* Absolutely centered text elements to prevent alignment shifts */}
-              <div 
-                ref={transitionTextRef}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center text-center px-6 w-full max-w-2xl select-none"
-              >
-                <span className="fade-item text-[9px] font-sans font-bold tracking-[0.35em] text-accent-gold uppercase mb-3 block">
-                  [ SEC. 01 // MANIFESTO ]
-                </span>
-                <h2 className="fade-item text-3xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tight text-white leading-[1.1] mb-4">
-                  engineering tactile digital monuments
+              {/* Section Heading — animated ref */}
+              <div ref={wwbHeadingRef} className="w-full flex flex-col items-center justify-center mb-16 select-none">
+                <h2
+                  className="font-sans font-bold text-center text-white leading-tight uppercase tracking-[0.15em]"
+                  style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3rem)' }}
+                >
+                  what we build<span className="text-[#26CCC2]">.</span>
                 </h2>
-                <p className="fade-item text-xs font-sans font-light tracking-widest text-white/70 max-w-md uppercase">
-                  Combining high-performance frontend logic with luxury design paradigms.
+                <p className="text-xs md:text-sm text-gray-500 font-sans mt-3 text-center tracking-wider uppercase">
+                  A deep-dive into our core creative capabilities.
                 </p>
               </div>
+
+              {/* Bento Grid layout — each card gets its own ref */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {bentoItems.map((item, index) => (
+                  <BentoCard key={item.id} item={item} cardRef={bentoRefs[index]} />
+                ))}
+              </div>
+
+              {/* Stats Section */}
+              <div ref={statsContainerRef} className="w-full flex justify-center z-40 mt-16 md:mt-24 px-2 md:px-0">
+                <div className="flex flex-row justify-between items-center w-full max-w-5xl gap-2 md:gap-8 text-white">
+                  {/* Stat 1 */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-gray-500 mb-1 md:mb-2">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 md:w-8 md:h-8">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                    <div className="font-sans font-bold text-xl md:text-5xl mb-0.5 md:mb-1 flex items-baseline">
+                      <span ref={count1Ref}>0</span><span className="text-[#26CCC2] text-lg md:text-3xl ml-0.5 md:ml-1">+</span>
+                    </div>
+                    <div className="font-sans text-[9px] md:text-sm text-gray-400 uppercase tracking-wider md:tracking-widest font-semibold leading-tight">
+                      Projects<br className="md:hidden"/> Delivered
+                    </div>
+                  </div>
+
+                  {/* Stat 2 */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-gray-500 mb-1 md:mb-2">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 md:w-8 md:h-8">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="font-sans font-bold text-xl md:text-5xl mb-0.5 md:mb-1 flex items-baseline">
+                      <span ref={count2Ref}>0</span><span className="text-[#26CCC2] text-lg md:text-3xl ml-0.5 md:ml-1">+</span>
+                    </div>
+                    <div className="font-sans text-[9px] md:text-sm text-gray-400 uppercase tracking-wider md:tracking-widest font-semibold leading-tight">
+                      Businesses<br className="md:hidden"/> Trusted
+                    </div>
+                  </div>
+
+                  {/* Stat 3 */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-gray-500 mb-1 md:mb-2">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 md:w-8 md:h-8">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v8l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <div className="font-sans font-bold text-xl md:text-5xl mb-0.5 md:mb-1 flex items-baseline">
+                      <span ref={count3Ref}>0</span><span className="text-[#26CCC2] text-sm md:text-2xl ml-1 uppercase tracking-wide">Day</span>
+                    </div>
+                    <div className="font-sans text-[9px] md:text-sm text-gray-400 uppercase tracking-wider md:tracking-widest font-semibold leading-tight">
+                      Avg.<br className="md:hidden"/> Delivery
+                    </div>
+                  </div>
+
+                  {/* Stat 4 */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="text-gray-500 mb-1 md:mb-2">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 md:w-8 md:h-8">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                    </div>
+                    <div className="font-sans font-bold text-xl md:text-5xl mb-0.5 md:mb-1 flex items-baseline">
+                      <span ref={count4Ref}>0</span><span className="text-[#26CCC2] text-lg md:text-3xl ml-0.5 md:ml-1">%</span>
+                    </div>
+                    <div className="font-sans text-[9px] md:text-sm text-gray-400 uppercase tracking-wider md:tracking-widest font-semibold leading-tight">
+                      Client<br className="md:hidden"/> Trust
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
-          </div>
+          </section>
         </div>
 
       </div>

@@ -1,367 +1,293 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 import Magnetic from './Magnetic';
-import gsap from 'gsap';
+
+const navItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Works', href: '/work' },
+  { name: 'Case Studies', href: '/case-studies' },
+  { name: 'Pricing', href: '/pricing' },
+];
 
 const Navbar = () => {
-  const [visible, setVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(typeof window !== 'undefined' ? window.scrollY > 20 : false);
+  const location = useLocation();
+  const hamburgerRef = useRef(null);
+  const [origin, setOrigin] = useState({ x: '100%', y: '0%' });
 
-  const isFirstRender = useRef(true);
-  const buttonRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
-  const getButtonCenter = () => {
-    if (!buttonRef.current) return { x: window.innerWidth - 60, y: 45 };
-    const rect = buttonRef.current.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    return { x, y };
-  };
-
-  // Scroll visibility handler for the header bar
   useEffect(() => {
     const handleScroll = () => {
-      // If menu is open, keep navbar visible
-      if (menuOpen) {
-        setVisible(true);
-        return;
-      }
-      
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY < 80) {
-        setVisible(true);
-      } else if (currentScrollY > lastScrollY) {
-        setVisible(false); // Scroll down
-      } else {
-        setVisible(true); // Scroll up
-      }
-
-      if (currentScrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-      
-      setLastScrollY(currentScrollY);
+      setScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, menuOpen]);
+  }, []);
 
-
-
-  const navItems = [
-    { name: 'Manifesto', href: '#manifesto', num: '01', tag: 'Ideology' },
-    { name: 'Services', href: '#services', num: '02', tag: 'Expertise' },
-    { name: 'Projects', href: '#projects', num: '03', tag: 'Case Studies' },
-    { name: 'Testimonials', href: '#testimonials', num: '04', tag: 'Reviews' },
-    { name: 'Contact', href: '#contact', num: '05', tag: 'Inquiries' },
-  ];
-
-  const handleNavClick = (e, href) => {
-    e.preventDefault();
-    setMenuOpen(false);
-    
-    const element = document.querySelector(href);
-    if (element) {
-      if (window.lenis) {
-        // Stop scroll restriction first
-        window.lenis.start();
-        window.lenis.scrollTo(element, { offset: -60, duration: 1.5 });
-      } else {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  // GSAP animations for Menu Overlay open/close transition
+  // Close menu on route change
   useEffect(() => {
-    const overlay = document.querySelector('#menu-overlay');
-    const navLinks = document.querySelectorAll('.menu-nav-link');
-    const metaItems = document.querySelectorAll('.menu-meta-item');
-    const borderLines = document.querySelectorAll('.menu-border-line');
+    setMenuOpen(false);
+  }, [location.pathname]);
 
-    const { x, y } = getButtonCenter();
-
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      // Initialize hidden state via GSAP to avoid flashes
-      gsap.set(overlay, { clipPath: `circle(0% at ${x}px ${y}px)`, y: '0%', opacity: 1 });
-      return;
-    }
-
+  // Lock body scroll when menu is open
+  useEffect(() => {
     if (menuOpen) {
-      // Lock Lenis scroll
-      if (window.lenis) {
-        window.lenis.stop();
-      }
-
-      const tl = gsap.timeline();
-
-      // Ensure menu starts from correct closed position before animating in
-      gsap.killTweensOf([overlay, navLinks, metaItems, borderLines]);
-
-      tl.to(overlay, {
-        clipPath: `circle(150% at ${x}px ${y}px)`,
-        duration: 0.95,
-        ease: 'power3.inOut',
-      });
-
-      tl.fromTo(navLinks,
-        { y: 60, opacity: 0, rotateX: -15 },
-        { y: 0, opacity: 1, rotateX: 0, duration: 0.75, stagger: 0.06, ease: 'power3.out' },
-        '-=0.65'
-      );
-
-      tl.fromTo(borderLines,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 0.8, stagger: 0.05, ease: 'power3.inOut' },
-        '-=0.75'
-      );
-
-      tl.fromTo(metaItems,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, stagger: 0.04, ease: 'power2.out' },
-        '-=0.55'
-      );
+      document.body.style.overflow = 'hidden';
     } else {
-      // Release Lenis scroll
-      if (window.lenis) {
-        window.lenis.start();
-      }
-
-      const tl = gsap.timeline();
-
-      gsap.killTweensOf([overlay, navLinks, metaItems, borderLines]);
-
-      tl.to(metaItems, {
-        y: 15,
-        opacity: 0,
-        duration: 0.3,
-        stagger: 0.02,
-        ease: 'power2.in'
-      });
-
-      tl.to(borderLines, {
-        scaleX: 0,
-        duration: 0.35,
-        stagger: 0.02,
-        ease: 'power2.inOut'
-      }, '-=0.2');
-
-      tl.to(navLinks, {
-        y: -30,
-        opacity: 0,
-        duration: 0.35,
-        stagger: 0.03,
-        ease: 'power2.in'
-      }, '-=0.25');
-
-      tl.to(overlay, {
-        clipPath: `circle(0% at ${x}px ${y}px)`,
-        duration: 0.75,
-        ease: 'power3.inOut'
-      }, '-=0.2');
+      document.body.style.overflow = '';
     }
+    return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
+
+  const toggleMenu = useCallback(() => {
+    // Capture hamburger button position for radial origin
+    if (hamburgerRef.current) {
+      const rect = hamburgerRef.current.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      setOrigin({ x: `${x}px`, y: `${y}px` });
+    }
+    setMenuOpen((prev) => !prev);
+  }, []);
 
   return (
     <>
-      {/* Borderless navbar row containing ONLY logo & menu toggle */}
-      <nav 
-        className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-5 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          visible ? 'translate-y-0' : '-translate-y-full'
-        } ${
-          scrolled && !menuOpen 
-            ? 'bg-dark-bg/75 backdrop-blur-md border-b border-obsidian/3 shadow-[0_4px_30px_rgba(0,0,0,0.01)]' 
-            : 'bg-transparent'
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          scrolled ? 'bg-black/95 backdrop-blur-md shadow-lg' : 'bg-black'
         }`}
       >
-        <div className="w-full flex items-center justify-between">
-          {/* Creative Serif Logo */}
-          <Magnetic strength={0.3} range={50}>
-            <a 
-              href="#hero" 
-              onClick={(e) => handleNavClick(e, '#hero')}
-              className={`flex items-center text-2xl font-serif font-bold tracking-wider group select-none relative z-50 transition-colors duration-500 pb-1 ${
-                menuOpen ? 'text-dark-bg' : 'text-obsidian'
-              }`}
-              data-cursor="magnetic"
-            >
-              VISN
-              <span className="text-accent-gold group-hover:animate-pulse inline-block ml-0.5 select-none font-bold">.</span>
-              <span className={`absolute left-1/2 bottom-0 w-0 h-[1.5px] -translate-x-1/2 transition-all duration-300 ease-out group-hover:w-full ${
-                menuOpen ? 'bg-dark-bg' : 'bg-accent-gold'
-              }`} />
-            </a>
-          </Magnetic>
+        <div className="w-full px-6 sm:px-8 md:px-16 flex items-center justify-between h-16 relative">
+          {/* Hamburger — mobile only, positioned left */}
+          <button
+            ref={hamburgerRef}
+            onClick={toggleMenu}
+            className="md:hidden relative z-[60] w-10 h-10 flex flex-col items-center justify-center gap-[5px] focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            <motion.span
+              animate={menuOpen ? { rotate: 45, y: 7, backgroundColor: '#000' } : { rotate: 0, y: 0, backgroundColor: '#fff' }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="block w-6 h-[2px] rounded-full origin-center"
+            />
+            <motion.span
+              animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.2 }}
+              className="block w-6 h-[2px] rounded-full bg-white origin-center"
+            />
+            <motion.span
+              animate={menuOpen ? { rotate: -45, y: -7, backgroundColor: '#000' } : { rotate: 0, y: 0, backgroundColor: '#fff' }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="block w-6 h-[2px] rounded-full origin-center"
+            />
+          </button>
 
-          {/* Action pill triggers */}
-          <div className="flex items-center gap-4 relative z-50">
-            {/* Magnetic Menu Toggle */}
-            <Magnetic strength={0.2} range={35}>
-              <button
-                ref={buttonRef}
-                onClick={() => setMenuOpen(!menuOpen)}
-                className={`w-28 h-10 rounded-full border flex items-center justify-center text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] relative group overflow-hidden ${
-                  menuOpen 
-                    ? 'bg-dark-bg text-obsidian border-dark-bg shadow-inner' 
-                    : 'border-obsidian/10 text-obsidian hover:text-dark-bg hover:border-accent-gold'
-                }`}
+          {/* Logo — centered on mobile, left on desktop */}
+          <div className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0">
+            <Magnetic strength={0.3} range={50}>
+              <Link
+                to="/"
+                className="flex items-center text-2xl font-serif font-bold tracking-wider group select-none text-white"
                 data-cursor="magnetic"
               >
-                {/* Radial golden background fill on hover (only when closed) */}
-                {!menuOpen && (
-                  <span className="absolute top-1/2 left-1/2 w-[150%] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-gold scale-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-100 z-0" />
-                )}
-
-                {/* Relative container holding both layered contents */}
-                <div className="relative w-full h-full flex items-center justify-center z-10">
-                  {/* MENU Group (Hamburger Icon + MENU Text beside it) */}
-                  <div 
-                    className={`absolute flex items-center gap-2.5 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                      menuOpen 
-                        ? '-translate-y-8 opacity-0 pointer-events-none' 
-                        : 'translate-y-0 opacity-100'
-                    }`}
-                  >
-                    {/* Hamburger Icon */}
-                    <div className="flex flex-col justify-center items-center gap-1 w-3.5 h-3.5">
-                      <span className="block h-[1.2px] w-3.5 bg-current rounded-full" />
-                      <span className="block h-[1.2px] w-3.5 bg-current rounded-full" />
-                    </div>
-                    {/* MENU Text */}
-                    <span className="block h-3 text-left">
-                      MENU
-                    </span>
-                  </div>
-
-                  {/* CLOSE Group (X Icon + CLOSE Text beside it) */}
-                  <div 
-                    className={`absolute flex items-center gap-2.5 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                      menuOpen 
-                        ? 'translate-y-0 opacity-100' 
-                        : 'translate-y-8 opacity-0 pointer-events-none'
-                    }`}
-                  >
-                    {/* X Icon */}
-                    <div className="flex flex-col justify-center items-center gap-1 w-3.5 h-3.5 relative">
-                      <span className="block h-[1.2px] w-3.5 bg-current rounded-full rotate-45 absolute" />
-                      <span className="block h-[1.2px] w-3.5 bg-current rounded-full -rotate-45 absolute" />
-                    </div>
-                    {/* CLOSE Text */}
-                    <span className="block h-3 text-left">
-                      CLOSE
-                    </span>
-                  </div>
-                </div>
-              </button>
+                VISN
+                <span className="text-[#26CCC2] group-hover:animate-pulse inline-block ml-0.5 select-none font-bold">.</span>
+              </Link>
             </Magnetic>
           </div>
+
+          {/* Nav Links — desktop only */}
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map((item) => {
+              const isCurrentPage =
+                (item.href === '/' && location.pathname === '/' && !location.hash) ||
+                (item.href === location.pathname) ||
+                (item.href.includes('#') && location.hash === item.href.replace('/', ''));
+
+              return (
+                <Magnetic key={item.name} strength={0.15} range={25}>
+                  <Link
+                    to={item.href}
+                    onClick={(e) => {
+                      // Smooth scroll for hash links if already on the same page
+                      if (item.href.includes('#') && location.pathname === '/') {
+                        e.preventDefault();
+                        const hash = item.href.replace('/', '');
+                        if (window.lenis) {
+                          window.lenis.scrollTo(hash, { duration: 1.5 });
+                        } else {
+                          document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+                        }
+                        window.history.pushState(null, '', hash);
+                      }
+                    }}
+                    className={`relative text-xs font-sans font-bold uppercase tracking-[0.2em] transition-colors duration-300 cursor-none pb-1 ${
+                      isCurrentPage
+                        ? 'text-[#26CCC2]'
+                        : 'text-white/60 hover:text-white'
+                    }`}
+                    data-cursor="magnetic"
+                  >
+                    {item.name}
+                    {/* Active underline indicator */}
+                    <span
+                      className={`absolute left-0 bottom-0 h-[2px] bg-[#26CCC2] rounded-full transition-all duration-300 ease-out ${
+                        isCurrentPage ? 'w-full' : 'w-0'
+                      }`}
+                    />
+                  </Link>
+                </Magnetic>
+              );
+            })}
+          </div>
+
+          {/* Spacer for mobile to balance the hamburger on the left */}
+          <div className="w-10 md:hidden" />
         </div>
+
+        {/* Scroll Progress Indicator */}
+        <motion.div
+          className="h-1 bg-[#26CCC2] w-full origin-left"
+          style={{ scaleX }}
+        />
       </nav>
 
-      {/* Redesigned Luxury Dark Menu Overlay */}
-      <div 
-        id="menu-overlay"
-        className={`fixed inset-0 z-40 bg-obsidian flex items-center justify-center px-6 md:px-16 overflow-y-auto ${
-          menuOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
-        style={{ clipPath: 'circle(0% at 100% 0%)' }}
-      >
-        {/* Dynamic decorative luxury glow orb in background */}
-        <div className="absolute top-[25%] left-[25%] -z-10 h-[500px] w-[500px] rounded-full bg-accent-gold/5 blur-[120px] pointer-events-none" />
+      {/* ── MOBILE FULLSCREEN MENU OVERLAY ── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="fixed inset-0 z-[55] flex flex-col justify-center md:hidden px-8 sm:px-12"
+            initial="closed"
+            animate="open"
+            exit="closed"
+          >
+            {/* Radial accent background with reduced opacity and blur */}
+            <motion.div
+              className="absolute inset-0 bg-[#26CCC2]/95 backdrop-blur-md"
+              style={{
+                transformOrigin: `${origin.x} ${origin.y}`,
+              }}
+              variants={{
+                closed: {
+                  clipPath: `circle(0px at ${origin.x} ${origin.y})`,
+                  transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
+                },
+                open: {
+                  clipPath: `circle(150vmax at ${origin.x} ${origin.y})`,
+                  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+            />
 
-        {/* Content Grid */}
-        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 relative z-10 py-16 md:py-24">
-          
-          {/* Left Panel: Luxury serif Navigation Links */}
-          <div className="col-span-1 lg:col-span-7 flex flex-col justify-center">
-            <span className="menu-meta-item text-[8px] font-bold tracking-[0.35em] uppercase text-accent-gold mb-6 block">
-              [ INDEX DIRECTORY ]
-            </span>
-            <div className="flex flex-col w-full">
-              {navItems.map((item) => (
-                <div key={item.name} className="overflow-hidden w-full relative">
-                  {/* Underline line animation */}
-                  <div className="menu-border-line absolute bottom-0 left-0 w-full h-px bg-dark-bg/10 origin-left" />
-                  
-                  <a 
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className="menu-nav-link group flex items-baseline py-4 md:py-6 w-full text-left"
-                    data-cursor="magnetic"
-                    style={{ perspective: "1000px" }}
+            {/* Close Button mirroring the navbar hamburger */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMenuOpen(false)}
+              className="absolute top-3 left-6 sm:left-8 w-10 h-10 flex flex-col items-center justify-center gap-[5px] focus:outline-none z-20 bg-black rounded-full shadow-md"
+              aria-label="Close menu"
+            >
+              <motion.span
+                initial={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
+                animate={{ rotate: 45, y: 7, backgroundColor: '#fff' }}
+                exit={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="block w-5 h-[2px] rounded-full origin-center"
+              />
+              <motion.span
+                initial={{ opacity: 1, scaleX: 1 }}
+                animate={{ opacity: 0, scaleX: 0 }}
+                exit={{ opacity: 1, scaleX: 1 }}
+                transition={{ duration: 0.2 }}
+                className="block w-5 h-[2px] rounded-full bg-white origin-center"
+              />
+              <motion.span
+                initial={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
+                animate={{ rotate: -45, y: -7, backgroundColor: '#fff' }}
+                exit={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="block w-5 h-[2px] rounded-full origin-center"
+              />
+            </motion.button>
+
+            {/* Menu items */}
+            <nav className="relative z-10 flex flex-col items-start gap-16 sm:gap-20 mt-20">
+              {navItems.map((item, i) => {
+                const isCurrentPage =
+                  (item.href === '/' && location.pathname === '/' && !location.hash) ||
+                  (item.href === location.pathname) ||
+                  (item.href.includes('#') && location.hash === item.href.replace('/', ''));
+
+                return (
+                  <motion.div
+                    key={item.name}
+                    className="w-full"
+                    variants={{
+                      closed: {
+                        opacity: 0,
+                        x: -40,
+                        scale: 0.95,
+                        transition: {
+                          duration: 0.25,
+                          delay: (navItems.length - 1 - i) * 0.04,
+                        },
+                      },
+                      open: {
+                        opacity: 1,
+                        x: 0,
+                        scale: 1,
+                        transition: {
+                          duration: 0.45,
+                          delay: 0.3 + i * 0.08,
+                          ease: [0.16, 1, 0.3, 1],
+                        },
+                      },
+                    }}
                   >
-                    {/* Double-digit indicator */}
-                    <span className="text-[10px] font-mono tracking-widest text-dark-bg/35 mr-4 md:mr-6 group-hover:text-accent-gold transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                      {item.num}
-                    </span>
-                    
-                    {/* Big luxury serif text (Italicized spacing expansion) */}
-                    <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-light tracking-tight text-dark-bg/90 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-accent-gold group-hover:tracking-wider transform group-hover:translate-x-3 inline-block">
-                      {item.name}
-                    </span>
-                    
-                    {/* Micro-hover tag reveal */}
-                    <span className="opacity-0 -translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] text-[8px] font-bold tracking-[0.25em] text-accent-gold bg-accent-gold/10 px-2 py-0.5 rounded-full uppercase ml-4 md:ml-6 relative -top-1 sm:-top-2 select-none">
-                      {item.tag}
-                    </span>
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Panel: Clean Contacts & Links with lots of whitespace */}
-          <div className="col-span-1 lg:col-span-4 lg:col-start-9 flex flex-col justify-center gap-14 lg:pl-12 border-t lg:border-t-0 lg:border-l border-dark-bg/10 pt-10 lg:pt-0">
-            {/* Contact Details */}
-            <div className="menu-meta-item">
-              <span className="text-[9px] font-bold tracking-[0.3em] text-dark-bg/40 uppercase mb-3 block">
-                INQUIRIES
-              </span>
-              <a 
-                href="mailto:hello@visn.studio"
-                className="relative text-2xl font-serif font-light text-dark-bg hover:text-accent-gold transition-colors duration-300 pb-1 group/mail inline-block"
-              >
-                hello@visn.studio
-                <span className="absolute left-0 bottom-0 w-full h-px bg-accent-gold scale-x-0 origin-left transition-transform duration-300 ease-out group-hover/mail:scale-x-100" />
-              </a>
-              <p className="text-[11px] text-dark-bg/40 mt-2 font-light">
-                San Francisco, California.
-              </p>
-            </div>
-
-            {/* Social Links */}
-            <div className="menu-meta-item">
-              <span className="text-[9px] font-bold tracking-[0.3em] text-dark-bg/40 uppercase mb-4 block">
-                CONNECTIVITY
-              </span>
-              <div className="flex flex-col gap-3 items-start">
-                {[
-                  { name: 'Instagram', href: '#' },
-                  { name: 'LinkedIn', href: '#' },
-                  { name: 'Behance', href: '#' },
-                  { name: 'Twitter', href: '#' }
-                ].map((social) => (
-                  <Magnetic key={social.name} strength={0.15} range={20}>
-                    <a 
-                      href={social.href}
-                      className="relative text-xs font-serif font-light tracking-wide text-dark-bg/75 hover:text-accent-gold transition-colors duration-300 pb-0.5 group/social"
+                    <Link
+                      to={item.href}
+                      onClick={(e) => {
+                        if (item.href.includes('#') && location.pathname === '/') {
+                          e.preventDefault();
+                          const hash = item.href.replace('/', '');
+                          if (window.lenis) {
+                            window.lenis.scrollTo(hash, { duration: 1.5 });
+                          } else {
+                            document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+                          }
+                          window.history.pushState(null, '', hash);
+                        }
+                        setMenuOpen(false);
+                      }}
+                      className={`relative inline-block font-sans text-5xl sm:text-6xl font-black uppercase tracking-[0.02em] transition-opacity duration-200 ${
+                        isCurrentPage
+                          ? 'text-black'
+                          : 'text-black/60 active:text-black'
+                      }`}
                     >
-                      {social.name}
-                      <span className="absolute left-0 bottom-0 w-full h-px bg-accent-gold scale-x-0 origin-left transition-transform duration-300 ease-out group-hover/social:scale-x-100" />
-                    </a>
-                  </Magnetic>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                      {item.name}
+                      {/* Active underline indicator */}
+                      {isCurrentPage && (
+                        <span className="absolute left-0 -bottom-2 w-full h-[4px] sm:h-[5px] bg-black rounded-r-full rounded-l-full" />
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

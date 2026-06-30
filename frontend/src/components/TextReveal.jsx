@@ -41,31 +41,28 @@ const TextReveal = () => {
     <section 
       ref={sectionRef}
       id="manifesto"
-      className="relative flex min-h-[85vh] w-full flex-col justify-center px-6 py-28 md:px-12 bg-transparent z-10"
+      className="relative flex min-h-[85vh] w-full flex-col justify-center px-6 py-28 md:px-12 bg-[#0A0A0A] z-10"
     >
       {/* Hairline top border in light mode */}
-      <div className="absolute left-0 right-0 top-0 h-px bg-linear-to-r from-transparent via-obsidian/10 to-transparent" />
+      <div className="absolute left-0 right-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
       
       <div className="mx-auto max-w-6xl flex flex-col md:flex-row gap-10 md:gap-20">
         
         {/* Left column metadata */}
         <div className="w-full md:w-1/4 flex flex-col justify-start select-none">
           <div className="flex items-center gap-3 mb-3">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent-gold shadow-[0_0_6px_#B59B75]" />
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-obsidian/50">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent-gold shadow-[0_0_6px_#26CCC2]" />
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">
               OUR MANIFESTO
             </h2>
           </div>
-          <p className="text-[9px] font-mono text-obsidian/40 tracking-wider">
-            [ SEC. 01 // CORE ETHOS ]
-          </p>
         </div>
-
+ 
         {/* Right column text reveal */}
         <div className="w-full md:w-3/4">
           <p 
             ref={textRef} 
-            className="text-2xl sm:text-3xl md:text-[36px] lg:text-[40px] font-serif font-light leading-relaxed tracking-normal text-obsidian flex flex-wrap gap-x-2 gap-y-1.5 select-none"
+            className="text-2xl sm:text-3xl md:text-[36px] lg:text-[40px] font-serif font-light leading-relaxed tracking-normal text-white flex flex-wrap gap-x-2 gap-y-1.5 select-none"
           >
             {words.map((word, index) => (
               <span 
@@ -81,7 +78,7 @@ const TextReveal = () => {
       </div>
       
       {/* Hairline bottom border in light mode */}
-      <div className="absolute left-0 right-0 bottom-0 h-px bg-linear-to-r from-transparent via-obsidian/10 to-transparent" />
+      <div className="absolute left-0 right-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 };

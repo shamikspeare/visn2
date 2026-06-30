@@ -1,24 +1,67 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Import bespoke creative components
-import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
-import ScrollProgress from './components/ScrollProgress';
 import Hero from './components/Hero';
-import TextReveal from './components/TextReveal';
-import DuoGlideGallery from './components/DuoGlideGallery';
-import HorizontalProjects from './components/HorizontalProjects';
-import BentoServices from './components/BentoServices';
+import OngoingClients from './components/OngoingClients';
+import SelectedWorks from './components/SelectedWorks';
+import SelectedCaseStudies from './components/SelectedCaseStudies';
+import WhyChooseUs from './components/WhyChooseUs';
 import Testimonials from './components/Testimonials';
 import ContactFooter from './components/ContactFooter';
+import Pricing from './components/Pricing';
+import Work from './components/Work';
+import CaseStudies from './components/CaseStudies';
+import CaseStudyPage from './components/CaseStudyPage';
+import FAQ from './components/FAQ';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Clear scroll memory on full page refresh
+if (typeof window !== 'undefined') {
+  window.history.scrollRestoration = 'manual';
+  Object.keys(sessionStorage).forEach(key => {
+    if (key.startsWith('scroll:')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+}
+
+
+// Remember and restore scroll position per page.
+// On first visit → scroll to top. On return → restore last position.
+const ScrollManager = () => {
+  const { pathname } = useLocation();
+  const prevPathname = useRef(null);
+
+  useEffect(() => {
+    // Save scroll position for the page we're leaving
+    if (prevPathname.current !== null) {
+      sessionStorage.setItem(`scroll:${prevPathname.current}`, window.scrollY);
+    }
+
+    // Restore scroll position for the new page, or default to 0
+    const saved = sessionStorage.getItem(`scroll:${pathname}`);
+    const target = saved !== null ? parseInt(saved, 10) : 0;
+
+    if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+      window.lenis.scrollTo(target, { immediate: true });
+    } else {
+      window.scrollTo(0, target);
+    }
+
+    prevPathname.current = pathname;
+  }, [pathname]);
+
+  return null;
+};
+
 const App = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
 
   useEffect(() => {
     // 1. Initialize Lenis Smooth Scroll
@@ -51,7 +94,6 @@ const App = () => {
       lenis.stop();
     } else {
       lenis.start();
-      // Recalculate ScrollTrigger offsets once the preloader resolves and layout is visible
       refreshTimer = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 1200);
@@ -66,27 +108,38 @@ const App = () => {
   }, [isLoaded]);
 
   return (
-    <>
-      {/* Screen Percentage preloader wipe */}
-      <Preloader onComplete={() => setIsLoaded(true)} />
-
+    <Router>
+      <ScrollManager />
       {/* Main landing layout structure */}
-      <div 
-        className={`relative z-10 transition-opacity duration-1000 ease-out ${
-          isLoaded ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+      <div
+        className={`relative z-10 transition-opacity duration-1000 ease-out flex flex-col min-h-screen ${isLoaded ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
       >
-        <ScrollProgress />
         <Navbar />
-        <Hero isLoaded={isLoaded} />
-        <TextReveal />
-        <DuoGlideGallery />
-        <HorizontalProjects />
-        <BentoServices />
-        <Testimonials />
+
+        <div className="flex-1 w-full">
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Hero isLoaded={isLoaded} />
+                <OngoingClients />
+                <SelectedWorks />
+                <SelectedCaseStudies />
+                <WhyChooseUs />
+                <Testimonials />
+                <FAQ />
+              </>
+            } />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/case-studies" element={<CaseStudies />} />
+            <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
+          </Routes>
+        </div>
+
         <ContactFooter />
       </div>
-    </>
+    </Router>
   );
 };
 

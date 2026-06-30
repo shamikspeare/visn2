@@ -63,7 +63,7 @@ const CustomCursor = () => {
           gsap.to(ring, { 
             width: 72, 
             height: 72, 
-            backgroundColor: '#B59B75', // Champagne gold fill
+            backgroundColor: '#26CCC2', // Champagne gold fill
             borderColor: 'transparent',
             mixBlendMode: 'normal',
             duration: 0.3 
@@ -75,7 +75,7 @@ const CustomCursor = () => {
           gsap.to(ring, { 
             width: 72, 
             height: 72, 
-            backgroundColor: '#B59B75', // Champagne gold fill
+            backgroundColor: '#26CCC2', // Champagne gold fill
             borderColor: 'transparent',
             mixBlendMode: 'normal',
             duration: 0.3 
@@ -86,14 +86,14 @@ const CustomCursor = () => {
           gsap.to(ring, { 
             width: 44, 
             height: 44, 
-            borderColor: '#B59B75', 
+            borderColor: '#26CCC2', 
             borderWidth: 1.5, 
             scale: 1.15,
             backgroundColor: 'transparent',
             mixBlendMode: 'normal',
             duration: 0.3 
           });
-          gsap.to(dot, { scale: 1.4, backgroundColor: '#B59B75', duration: 0.2 });
+          gsap.to(dot, { scale: 1.4, backgroundColor: '#26CCC2', duration: 0.2 });
         }
       } else if (isClickable) {
         gsap.to(ring, { 
@@ -125,7 +125,7 @@ const CustomCursor = () => {
           scale: 1, 
           duration: 0.3 
         });
-        gsap.to(dot, { scale: 1, backgroundColor: '#B59B75', duration: 0.3 });
+        gsap.to(dot, { scale: 1, backgroundColor: '#26CCC2', duration: 0.3 });
         gsap.to(textEl, { opacity: 0, scale: 0.5, duration: 0.2 });
       }
     };

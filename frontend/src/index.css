@@ -3,8 +3,8 @@
 @theme {
   --font-serif: 'Fraunces', serif;
   --font-sans: 'Outfit', sans-serif;
-  --color-accent-gold: #B59B75;
-  --color-accent-gold-dark: #9E825A;
+  --color-accent-gold: #26CCC2;
+  --color-accent-gold-dark: #1EAF9B;
   --color-dark-bg: #FAF8F5;
   --color-dark-card: #F3F1ED;
   --color-obsidian: #151515;
@@ -15,6 +15,7 @@
     background-color: #FAF8F5;
     color: #151515;
     font-family: var(--font-sans);
+    font-size: 112.5%; /* 18px base font size instead of 16px to increase readability */
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -77,7 +78,7 @@
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #B59B75;
+    background: #26CCC2;
   }
 }
 
@@ -88,12 +89,12 @@
 }
 
 @utility text-stroke-glow {
-  -webkit-text-stroke: 1px rgba(181, 155, 117, 0.4);
+  -webkit-text-stroke: 1px rgba(38, 204, 194, 0.4);
   color: transparent;
 }
 
 @utility text-glow-gold {
-  text-shadow: 0 0 10px rgba(181, 155, 117, 0.15);
+  text-shadow: 0 0 10px rgba(38, 204, 194, 0.15);
 }
 
 @utility bg-grid-pattern {
