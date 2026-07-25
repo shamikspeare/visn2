@@ -2,7 +2,7 @@ import React from 'react';
 import { Check, X, MessageSquare, FileText, Rocket, Laptop, Pencil, ShieldCheck, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const WhyChooseUs = () => {
+const WhyChooseUs = ({ onBookMeetingClick }) => {
   const comparisonData = [
     {
       feature: "24/7 Feedback",
@@ -156,8 +156,9 @@ const WhyChooseUs = () => {
 
         {/* CTA Button */}
         <div className="w-full flex justify-center mt-12 md:mt-16 mb-6">
-          <motion.a
-            href="mailto:gshamik14@gmail.com"
+          <motion.button
+            type="button"
+            onClick={onBookMeetingClick}
             whileHover="hover"
             whileTap="tap"
             variants={{
@@ -176,7 +177,7 @@ const WhyChooseUs = () => {
             >
               <ArrowRight className="w-5 h-5" />
             </motion.div>
-          </motion.a>
+          </motion.button>
         </div>
 
       </div>

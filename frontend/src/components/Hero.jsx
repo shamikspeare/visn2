@@ -76,7 +76,7 @@ const BentoCard = ({ item, cardRef }) => {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Hero = ({ isLoaded }) => {
+const Hero = ({ isLoaded, onBookMeetingClick }) => {
   const scrollWrapperRef = useRef(null);
   const pinContainerRef = useRef(null);
   const overlayRef = useRef(null);
@@ -324,8 +324,9 @@ const Hero = ({ isLoaded }) => {
 
               {/* Primary — teal base, dark sweep on hover */}
               <Magnetic strength={0.2} range={50}>
-                <motion.a
-                  href="mailto:gshamik14@gmail.com"
+                <motion.button
+                  type="button"
+                  onClick={onBookMeetingClick}
                   whileHover="hover"
                   whileTap="tap"
                   variants={{
@@ -345,7 +346,7 @@ const Hero = ({ isLoaded }) => {
                   >
                     <ArrowRight className="w-5 h-5" />
                   </motion.div>
-                </motion.a>
+                </motion.button>
               </Magnetic>
 
               {/* Secondary — dark base, teal sweep on hover */}

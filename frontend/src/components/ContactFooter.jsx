@@ -1,9 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 import Magnetic from './Magnetic';
 import { ArrowUp, Send } from 'lucide-react';
 
 const ContactFooter = () => {
-  const formRef = useRef(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
   const handleScrollTop = (e) => {
     e.preventDefault();
@@ -14,10 +23,32 @@ const ContactFooter = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Project details received. We will shape your vision soon.');
-    e.target.reset();
+    setIsSubmitting(true);
+
+    try {
+      const { data } = await axios.post(`${apiBaseUrl}/api/contact`, formData);
+      toast.success(data?.message || 'Message sent successfully.');
+      setFormData({
+        name: '',
+        email: '',
+        message: '',
+      });
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to send message. Please try again.';
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,12 +88,15 @@ const ContactFooter = () => {
           </div>
 
           <div className="rounded-3xl bg-gray-200 p-8 md:p-12 backdrop-blur-md shadow-sm">
-            <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-8">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
               {/* Form Input 1 */}
               <div className="group relative flex flex-col gap-2 w-full border-b border-obsidian/15 focus-within:border-accent-gold transition-colors duration-500 pb-2">
                 <label className="text-[9px] font-bold tracking-[0.3em] text-accent-gold uppercase">Your Name</label>
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
                   required
                   placeholder="e.g. John Doe"
                   className="w-full bg-transparent py-1 text-sm font-sans font-light text-obsidian placeholder-obsidian/20 focus:outline-none rounded-none"
@@ -75,6 +109,9 @@ const ContactFooter = () => {
                 <label className="text-[9px] font-bold tracking-[0.3em] text-accent-gold uppercase">Email Address</label>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   required
                   placeholder="e.g. john@example.com"
                   className="w-full bg-transparent py-1 text-sm font-sans font-light text-obsidian placeholder-obsidian/20 focus:outline-none rounded-none"
@@ -87,6 +124,9 @@ const ContactFooter = () => {
                 <label className="text-[9px] font-bold tracking-[0.3em] text-accent-gold uppercase">Brief Description</label>
                 <textarea
                   rows="4"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
                   required
                   placeholder="Tell us about your digital vision..."
                   className="w-full bg-transparent py-1 text-sm font-sans font-light text-obsidian placeholder-obsidian/20 focus:outline-none resize-none rounded-none"
@@ -98,9 +138,10 @@ const ContactFooter = () => {
               <Magnetic strength={0.12} range={30}>
                 <button
                   type="submit"
-                  className="mt-4 flex w-full items-center justify-center gap-3 py-4 rounded-full bg-obsidian text-dark-bg font-bold text-[10px] uppercase tracking-[0.25em] hover:bg-accent-gold hover:text-white hover:shadow-[0_12px_30px_rgba(181,155,117,0.3)] transition-all duration-300 cursor-none"
+                  disabled={isSubmitting}
+                  className="mt-4 flex w-full items-center justify-center gap-3 py-4 rounded-full bg-obsidian text-dark-bg font-bold text-[10px] uppercase tracking-[0.25em] hover:bg-accent-gold hover:text-white hover:shadow-[0_12px_30px_rgba(181,155,117,0.3)] transition-all duration-300 cursor-none disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  SEND INQUIRY
+                  {isSubmitting ? 'SENDING...' : 'SEND INQUIRY'}
                   <Send className="h-3.5 w-3.5" />
                 </button>
               </Magnetic>

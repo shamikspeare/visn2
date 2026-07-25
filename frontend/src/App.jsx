@@ -12,12 +12,14 @@ import SelectedCaseStudies from './components/SelectedCaseStudies';
 import WhyChooseUs from './components/WhyChooseUs';
 import Testimonials from './components/Testimonials';
 import ContactFooter from './components/ContactFooter';
+import ContactPopup from './components/ContactPopup';
 import Pricing from './components/Pricing';
 import Work from './components/Work';
 import CaseStudies from './components/CaseStudies';
 import CaseStudyPage from './components/CaseStudyPage';
 import FAQ from './components/FAQ';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -62,6 +64,7 @@ const ScrollManager = () => {
 
 const App = () => {
   const [isLoaded, setIsLoaded] = useState(true);
+  const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
 
   useEffect(() => {
     // 1. Initialize Lenis Smooth Scroll
@@ -109,7 +112,18 @@ const App = () => {
 
   return (
     <Router>
+      <Toaster
+        position="bottom-left"
+        toastOptions={{
+          duration: 3500,
+          style: {
+            transform: 'scale(3)',
+            transformOrigin: 'bottom center',
+          },
+        }}
+      />
       <ScrollManager />
+      <ContactPopup isOpen={isContactPopupOpen} onClose={() => setIsContactPopupOpen(false)} />
       {/* Main landing layout structure */}
       <div
         className={`relative z-10 transition-opacity duration-1000 ease-out flex flex-col min-h-screen ${isLoaded ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -121,11 +135,11 @@ const App = () => {
           <Routes>
             <Route path="/" element={
               <>
-                <Hero isLoaded={isLoaded} />
+                <Hero isLoaded={isLoaded} onBookMeetingClick={() => setIsContactPopupOpen(true)} />
                 <OngoingClients />
                 <SelectedWorks />
                 <SelectedCaseStudies />
-                <WhyChooseUs />
+                <WhyChooseUs onBookMeetingClick={() => setIsContactPopupOpen(true)} />
                 <Testimonials />
                 <FAQ />
               </>
