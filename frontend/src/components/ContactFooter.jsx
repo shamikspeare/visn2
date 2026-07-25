@@ -153,7 +153,7 @@ const ContactFooter = () => {
           <img
             src="/images/confused.png"
             alt="Still Confused"
-            className="w-full h-auto object-contain object-right-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
+            className="w-full h-auto object-contain object-bottom-right drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
           />
         </div>
       </div>
