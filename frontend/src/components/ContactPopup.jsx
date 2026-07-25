@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Send, X } from 'lucide-react';
+import { CONTACT_API_URL } from '../config/api';
 
 const ContactPopup = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -13,8 +14,6 @@ const ContactPopup = ({ isOpen, onClose }) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const popupCardRef = useRef(null);
-
-  const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
   useEffect(() => {
     if (!isOpen) return;
@@ -85,7 +84,7 @@ const ContactPopup = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      const { data } = await axios.post(`${apiBaseUrl}/api/contact`, formData);
+      const { data } = await axios.post(CONTACT_API_URL, formData);
       toast.success(data?.message || 'Message sent successfully.');
       setFormData({
         name: '',

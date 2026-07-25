@@ -3,6 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import Magnetic from './Magnetic';
 import { ArrowUp, Send } from 'lucide-react';
+import { CONTACT_API_URL } from '../config/api';
 
 const ContactFooter = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +12,6 @@ const ContactFooter = () => {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const apiBaseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
   const handleScrollTop = (e) => {
     e.preventDefault();
@@ -36,7 +35,7 @@ const ContactFooter = () => {
     setIsSubmitting(true);
 
     try {
-      const { data } = await axios.post(`${apiBaseUrl}/api/contact`, formData);
+      const { data } = await axios.post(CONTACT_API_URL, formData);
       toast.success(data?.message || 'Message sent successfully.');
       setFormData({
         name: '',
