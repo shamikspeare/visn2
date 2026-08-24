@@ -15,7 +15,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const hamburgerRef = useRef(null);
-  const [origin, setOrigin] = useState({ x: '100%', y: '0%' });
+  const [origin, setOrigin] = useState({ x: 0, y: 0, diameter: 0 });
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -48,12 +48,14 @@ const Navbar = () => {
   }, [menuOpen]);
 
   const toggleMenu = useCallback(() => {
-    // Capture hamburger button position for radial origin
+    // Capture hamburger button position for the reveal circle's origin
     if (hamburgerRef.current) {
       const rect = hamburgerRef.current.getBoundingClientRect();
       const x = rect.left + rect.width / 2;
       const y = rect.top + rect.height / 2;
-      setOrigin({ x: `${x}px`, y: `${y}px` });
+      // Diameter big enough to cover the farthest corner from the origin
+      const diameter = 2.2 * Math.hypot(window.innerWidth, window.innerHeight);
+      setOrigin({ x, y, diameter });
     }
     setMenuOpen((prev) => !prev);
   }, []);
@@ -164,24 +166,29 @@ const Navbar = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="fixed inset-0 z-[55] flex flex-col justify-center md:hidden px-8 sm:px-12"
+            className="fixed inset-0 z-[55] flex flex-col justify-center md:hidden px-8 sm:px-12 overflow-hidden"
             initial="closed"
             animate="open"
             exit="closed"
           >
-            {/* Radial accent background with reduced opacity and blur */}
+            {/* Reveal circle — scaled via transform (GPU-composited), not clip-path */}
             <motion.div
-              className="absolute inset-0 bg-[#26CCC2]/95 backdrop-blur-md"
+              className="absolute rounded-full bg-[#26CCC2]/95 backdrop-blur-md will-change-transform"
               style={{
-                transformOrigin: `${origin.x} ${origin.y}`,
+                width: origin.diameter,
+                height: origin.diameter,
+                left: origin.x,
+                top: origin.y,
+                translateX: '-50%',
+                translateY: '-50%',
               }}
               variants={{
                 closed: {
-                  clipPath: `circle(0px at ${origin.x} ${origin.y})`,
+                  scale: 0,
                   transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
                 },
                 open: {
-                  clipPath: `circle(150vmax at ${origin.x} ${origin.y})`,
+                  scale: 1,
                   transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
                 },
               }}

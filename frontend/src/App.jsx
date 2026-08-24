@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // Import bespoke creative components
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import OngoingClients from './components/OngoingClients';
 import SelectedWorks from './components/SelectedWorks';
 import SelectedCaseStudies from './components/SelectedCaseStudies';
 import WhyChooseUs from './components/WhyChooseUs';
@@ -136,7 +135,6 @@ const App = () => {
             <Route path="/" element={
               <>
                 <Hero isLoaded={isLoaded} onBookMeetingClick={() => setIsContactPopupOpen(true)} />
-                <OngoingClients />
                 <SelectedWorks />
                 <SelectedCaseStudies />
                 <WhyChooseUs onBookMeetingClick={() => setIsContactPopupOpen(true)} />

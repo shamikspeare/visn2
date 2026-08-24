@@ -2,10 +2,10 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const projects = [
-  { id: 4, title: 'SN Enterprises',  image: '/images/snenterprises.png', link: 'https://www.snenterprise.store/' },
-  { id: 2, title: 'Blockscroll',     image: '/images/blockscroll.png', link: 'https://blockscroll.app/' },
-  { id: 1, title: 'DocNow',          image: '/images/docnow.png', link: 'https://docnow.in/' },
-  { id: 3, title: 'Aadi Shakti',    image: '/images/aadi-shakti.png', link: 'https://aadishaktimission.vercel.app' },
+  { id: 4, title: 'SN Enterprises',  image: '/images/snenterprises.webp', link: 'https://www.snenterprise.store/' },
+  { id: 2, title: 'Blockscroll',     image: '/images/blockscroll.webp', link: 'https://blockscroll.app/' },
+  { id: 1, title: 'DocNow',          image: '/images/docnow.webp', link: 'https://docnow.in/' },
+  { id: 3, title: 'Aadi Shakti',    image: '/images/aadi-shakti.webp', link: 'https://aadishaktimission.vercel.app' },
 ];
 
 const Work = () => {

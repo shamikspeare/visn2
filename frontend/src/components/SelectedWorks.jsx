@@ -4,10 +4,39 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const projects = [
-  { id: 4, title: 'SN Enterprises', image: '/images/snenterprises.png', description: 'A website for a wholesale footwear distributor, making it easier to explore products, franchise opportunities, and business inquiries.', link: 'https://www.snenterprise.store/' },
-  { id: 2, title: 'Blockscroll', image: '/images/blockscroll.png', description: 'A connected web and mobile platform built to help users take control of screen time through intelligent content blocking.', link: 'https://blockscroll.app/' },
-  { id: 1, title: 'DocNow', image: '/images/docnow.png', description: 'A digital platform for booking at home diagnostic tests and healthcare services.', link: 'https://docnow.in/' },
-  { id: 3, title: 'Aadi Shakti', image: '/images/aadi-shakti.png', description: 'A website built for Aadi Shakti Foundation to showcase its programs, impact, and commitment to community development.', link: 'https://aadishaktimission.vercel.app' },
+  { 
+    id: 2, 
+    title: 'Blockscroll', 
+    image: '/images/blockscroll.webp', 
+    description: 'A connected web and mobile platform built to help users take control of screen time through intelligent content blocking.', 
+    link: 'https://blockscroll.app/',
+    isFeatured: true,
+    tags: ['App Development', 'Web Platform'] 
+  },
+  { 
+    id: 4, 
+    title: 'SN Enterprises', 
+    image: '/images/snenterprises.webp', 
+    description: 'A website for a wholesale footwear distributor, making it easier to explore products, franchise opportunities, and business inquiries.', 
+    link: 'https://www.snenterprise.store/',
+    tags: ['Branding', 'Web'] 
+  },
+  { 
+    id: 1, 
+    title: 'DocNow', 
+    image: '/images/docnow.webp', 
+    description: 'A digital platform for booking at home diagnostic tests and healthcare services.', 
+    link: 'https://docnow.in/',
+    tags: ['App', 'Healthcare'] 
+  },
+  { 
+    id: 3, 
+    title: 'Aadi Shakti', 
+    image: '/images/aadi-shakti.webp', 
+    description: 'A website built for Aadi Shakti Foundation to showcase its programs, impact, and commitment to community development.', 
+    link: 'https://aadishaktimission.vercel.app',
+    tags: ['Web', 'Non-profit'] 
+  },
 ];
 
 const SelectedWorks = () => {
@@ -26,75 +55,105 @@ const SelectedWorks = () => {
       </div>
 
       <div className="w-full flex flex-col gap-8 px-6 md:px-16 lg:px-24 max-w-[1800px] mx-auto">
-        {projects.map((project, i) => (
-          <a
-            key={project.id}
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full bg-white rounded-[3rem] overflow-hidden relative shadow-md
-                       flex flex-col md:flex-row group border border-black/8 outline-none cursor-pointer block"
-          >
-            {/* Mobile: image on top — hidden on md+ where it moves to the right */}
-            <div className="w-full md:hidden relative overflow-hidden" style={{ height: '180px' }}>
-              <img
-                src={project.image}
-                alt={project.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-90
-                           group-hover:opacity-100 transition-opacity duration-500"
-              />
-            </div>
+        {projects.map((project, i) => {
+          const isFeatured = project.isFeatured || false;
 
-            {/* Left: details */}
-            <div className="w-full md:w-1/2 flex flex-col justify-center gap-y-3 md:gap-y-6
-                            relative z-10 p-5 md:p-14 lg:p-16">
-              <div>
-                <span className="font-sans text-xs text-[#26CCC2] uppercase tracking-[0.3em] mb-2 md:mb-4 block">
-                  {String(i + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
-                </span>
-                <h4 className="text-2xl md:text-4xl lg:text-5xl font-sans font-bold
-                               text-black uppercase tracking-wide mb-2 md:mb-4">
-                  {project.title}
-                </h4>
-                <p className="text-sm md:text-base text-gray-500 font-sans leading-relaxed max-w-sm">
-                  {project.description}
-                </p>
+          return (
+            <a
+              key={project.id}
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`w-full rounded-[3rem] overflow-hidden relative shadow-md
+                         flex flex-col md:flex-row group border outline-none cursor-pointer block
+                         transition-all duration-500
+                         ${isFeatured 
+                           ? 'bg-gradient-to-br from-[#F0FFFE] to-white border-[#26CCC2] border-2 shadow-[0_8px_40px_rgba(38,204,194,0.25)] hover:shadow-[0_12px_60px_rgba(38,204,194,0.35)] scale-[1.02] md:scale-100' 
+                           : 'bg-white border-black/8'}`}
+            >
+              {/* Featured Ribbon */}
+              {isFeatured && (
+                <div className="absolute top-0 left-0 z-20 bg-[#26CCC2] text-black font-sans font-bold text-xs uppercase tracking-widest px-5 py-2 rounded-br-2xl">
+                  App Development
+                </div>
+              )}
+
+              {/* Mobile: image on top — hidden on md+ where it moves to the right */}
+              <div className="w-full md:hidden relative overflow-hidden" style={{ height: '180px' }}>
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-90
+                             group-hover:opacity-100 transition-opacity duration-500"
+                />
               </div>
 
-              <div className="flex flex-wrap gap-2 mt-2">
-                {['Web Dev', 'Branding'].map(tag => (
-                  <span key={tag}
-                    className="px-4 py-2 rounded-full bg-black/6 text-[10px] md:text-xs
-                               font-sans text-gray-600 uppercase tracking-widest border border-black/8">
-                    {tag}
+              {/* Left: details */}
+              <div className={`w-full md:w-1/2 flex flex-col justify-center gap-y-3 md:gap-y-6
+                              relative z-10 p-5 md:p-14 lg:p-16
+                              ${isFeatured ? 'md:pr-8' : ''}`}>
+                <div>
+                  <span className="font-sans text-xs text-[#26CCC2] uppercase tracking-[0.3em] mb-2 md:mb-4 block">
+                    {String(i + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
                   </span>
-                ))}
+                  <h4 className={`text-2xl md:text-4xl lg:text-5xl font-sans font-bold
+                                 text-black uppercase tracking-wide mb-2 md:mb-4
+                                 ${isFeatured ? 'text-[#1A8A82]' : ''}`}>
+                    {project.title}
+                  </h4>
+                  <p className="text-sm md:text-base text-gray-500 font-sans leading-relaxed max-w-sm">
+                    {project.description}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {project.tags.map(tag => {
+                    const isAppDev = tag === 'App Development';
+                    return (
+                      <span key={tag}
+                        className={`px-4 py-2 rounded-full text-[10px] md:text-xs
+                                   font-sans uppercase tracking-widest border
+                                   ${isAppDev 
+                                     ? 'bg-[#26CCC2] text-black border-[#26CCC2] font-bold shadow-md' 
+                                     : 'bg-black/6 text-gray-600 border-black/8'}`}>
+                        {tag}
+                      </span>
+                    );
+                  })}
+                </div>
+
+                <div className={`flex items-center gap-3 px-6 py-3.5 rounded-full border
+                                border-black/15 cursor-pointer w-max mt-6
+                                transition-colors duration-300 
+                                ${isFeatured ? 'hover:border-[#26CCC2] border-[#26CCC2]/40' : 'hover:border-[#26CCC2]'}`}>
+                  <span className={`font-sans font-bold text-black uppercase tracking-widest
+                                   text-xs md:text-sm transition-colors
+                                   ${isFeatured ? 'text-[#1A8A82] group-hover:text-[#26CCC2]' : 'group-hover:text-[#26CCC2]'}`}>
+                    View Project
+                  </span>
+                  <ArrowRight className={`w-4 h-4 transition-colors
+                                        ${isFeatured ? 'text-[#1A8A82] group-hover:text-[#26CCC2]' : 'text-black group-hover:text-[#26CCC2]'}`} />
+                </div>
               </div>
 
-              <div className="flex items-center gap-3 px-6 py-3.5 rounded-full border
-                              border-black/15 cursor-pointer w-max mt-6
-                              transition-colors duration-300 hover:border-[#26CCC2]">
-                <span className="font-sans font-bold text-black uppercase tracking-widest
-                                 text-xs md:text-sm group-hover:text-[#26CCC2] transition-colors">
-                  View Project
-                </span>
-                <ArrowRight className="w-4 h-4 text-black group-hover:text-[#26CCC2] transition-colors" />
+              {/* Right: image — only visible on md+ */}
+              <div className={`hidden md:block w-full md:w-1/2 relative overflow-hidden
+                              ${isFeatured ? 'bg-gradient-to-br from-[#26CCC2]/10 to-transparent' : 'bg-gray-100'}
+                              border-l border-black/5`}
+                style={{ minHeight: '420px' }}>
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-90
+                             group-hover:opacity-100 transition-opacity duration-500"
+                />
+                {isFeatured && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#26CCC2]/5 via-transparent to-transparent pointer-events-none" />
+                )}
               </div>
-            </div>
-
-            {/* Right: image — only visible on md+ */}
-            <div className="hidden md:block w-full md:w-1/2 relative overflow-hidden
-                            bg-gray-100 border-l border-black/5"
-              style={{ minHeight: '420px' }}>
-              <img
-                src={project.image}
-                alt={project.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-90
-                           group-hover:opacity-100 transition-opacity duration-500"
-              />
-            </div>
-          </a>
-        ))}
+            </a>
+          );
+        })}
       </div>
 
       {/* CTA Button */}

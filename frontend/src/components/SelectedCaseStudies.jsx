@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const caseStudies = [
-  { id: 1, title: 'Healthy Eats Co', image: '/healthy eats co kolkata/landing page.png', label: 'Web Development', slug: 'healthyco' },
-  { id: 2, title: 'Calcutta Bungalow', image: '/Calcutta Bungalow/Dekstop view.png', label: 'UI/UX Design', slug: 'calcuttabungalow' },
-  { id: 3, title: 'Chai Break',      image: '/chai break/chaibreak 1.png', label: 'Brand Identity', slug: 'chaibreak' },
-  { id: 4, title: 'Rajbari',         image: '/rajbari bawali/rajbari landing page.png', label: 'Digital Marketing', slug: 'rajbari' },
+  { id: 1, title: 'Healthy Eats Co', image: '/healthy eats co kolkata/landing page.webp', label: 'Web Development', slug: 'healthyco' },
+  { id: 2, title: 'Calcutta Bungalow', image: '/Calcutta Bungalow/Dekstop view.webp', label: 'UI/UX Design', slug: 'calcuttabungalow' },
+  { id: 3, title: 'Chai Break', image: '/chai break/chaibreak 1.webp', label: 'Brand Identity', slug: 'chaibreak' },
+  { id: 4, title: 'Rajbari', image: '/rajbari bawali/rajbari landing page.webp', label: 'Digital Marketing', slug: 'rajbari' },
 ];
 
 const SelectedCaseStudies = () => {
@@ -38,13 +38,16 @@ const SelectedCaseStudies = () => {
             className="w-full bg-white rounded-[3rem] overflow-hidden relative shadow-md
                        flex flex-col md:flex-row group border border-black/8 outline-none block"
           >
-            {/* Mobile: image on top */}
+            {/* Mobile: image on top — hidden on md+ where it moves to the right */}
             <div className="w-full md:hidden relative overflow-hidden" style={{ height: '180px' }}>
               <img
-                src={study.image}
+                src={encodeURI(study.image)}
                 alt={study.title}
                 className="absolute inset-0 w-full h-full object-cover opacity-90
                            group-hover:opacity-100 transition-opacity duration-500"
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/800x420/FAF8F6/26CCC2?text=Case+Study';
+                }}
               />
             </div>
 
@@ -78,10 +81,13 @@ const SelectedCaseStudies = () => {
                             bg-gray-100 border-l border-black/5"
               style={{ minHeight: '420px' }}>
               <img
-                src={study.image}
+                src={encodeURI(study.image)}
                 alt={study.title}
                 className="absolute inset-0 w-full h-full object-cover opacity-90
                            group-hover:opacity-100 transition-opacity duration-500"
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/800x420/FAF8F6/26CCC2?text=Case+Study';
+                }}
               />
             </div>
           </Link>

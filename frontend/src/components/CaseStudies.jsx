@@ -3,10 +3,10 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const caseStudies = [
-  { id: 1, title: 'Healthy Eats Co', image: '/healthy eats co kolkata/landing page.png', label: 'Web Development', slug: 'healthyco' },
-  { id: 2, title: 'Calcutta Bungalow', image: '/Calcutta Bungalow/Dekstop view.png', label: 'UI/UX Design', slug: 'calcuttabungalow' },
-  { id: 3, title: 'Chai Break',      image: '/chai break/chaibreak 1.png', label: 'Brand Identity', slug: 'chaibreak' },
-  { id: 4, title: 'Rajbari',         image: '/rajbari bawali/rajbari landing page.png', label: 'Digital Marketing', slug: 'rajbari' },
+  { id: 1, title: 'Healthy Eats Co', image: '/healthy eats co kolkata/landing page.webp', label: 'Web Development', slug: 'healthyco' },
+  { id: 2, title: 'Calcutta Bungalow', image: '/Calcutta Bungalow/Dekstop view.webp', label: 'UI/UX Design', slug: 'calcuttabungalow' },
+  { id: 3, title: 'Chai Break',      image: '/chai break/chaibreak 1.webp', label: 'Brand Identity', slug: 'chaibreak' },
+  { id: 4, title: 'Rajbari',         image: '/rajbari bawali/rajbari landing page.webp', label: 'Digital Marketing', slug: 'rajbari' },
 ];
 
 const CaseStudies = () => {

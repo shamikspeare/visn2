@@ -70,7 +70,7 @@ const ContactFooter = () => {
       {/* Main content — full-width flex so image can bleed right */}
       <div className="w-full flex flex-col lg:flex-row items-stretch mb-0">
         {/* Left Column - Text and Form */}
-        <div className="flex-1 px-6 md:px-12 lg:pl-[max(3rem,calc((100vw-72rem)/2))] lg:pr-16 pt-0 pb-24 flex flex-col gap-12">
+        <div className="flex-1 px-6 md:px-12 lg:pl-[max(3rem,calc((100vw-72rem)/2))] lg:pr-16 pt-0 pb-8 lg:pb-24 flex flex-col gap-12">
           <div className="select-none">
             <h2
               className="font-sans font-bold text-black leading-tight uppercase tracking-[0.15em]"
@@ -148,12 +148,17 @@ const ContactFooter = () => {
           </div>
         </div>
 
-        {/* Right Column - Confused Image: anchored to right edge */}
-        <div className="hidden lg:flex w-[45%] items-end justify-end self-stretch select-none overflow-hidden">
+        {/* Right Column - Confused Image: now always visible */}
+        <div className="w-full lg:w-[45%] flex items-end justify-end self-stretch select-none overflow-hidden mt-8 lg:mt-0">
           <img
-            src="/images/confused.png"
+            src="/images/confused.webp"
             alt="Still Confused"
             className="w-full h-auto object-contain object-bottom-right drop-shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
+            onError={(e) => {
+              // Fallback if image fails to load
+              e.target.src = 'https://via.placeholder.com/600x600/FAF8F6/26CCC2?text=Confused?';
+              e.target.alt = 'Confused placeholder';
+            }}
           />
         </div>
       </div>

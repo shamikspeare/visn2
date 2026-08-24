@@ -52,13 +52,13 @@ const FAQ = () => {
   };
 
   return (
-    <section className="relative z-10 pt-24 px-6 md:px-12 pb-24 bg-[#FAF8F6]">
-      <div className="mb-10 text-center">
-        <h2 className="font-serif text-3xl md:text-5xl text-black mb-4">Frequently Asked Questions</h2>
-        <p className="text-gray-500 max-w-xl mx-auto">Everything you need to know about our services, pricing, and process.</p>
+    <section className="relative z-10 pt-16 md:pt-24 px-4 md:px-6 pb-16 md:pb-24 bg-[#FAF8F6]">
+      <div className="mb-8 md:mb-10 text-center">
+        <h2 className="font-serif text-2xl md:text-5xl text-black mb-2 md:mb-4">Frequently Asked Questions</h2>
+        <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base">Everything you need to know about our services, pricing, and process.</p>
       </div>
 
-      <div className="max-w-3xl mx-auto flex flex-col gap-4">
+      <div className="max-w-3xl mx-auto flex flex-col gap-3 md:gap-4">
         {faqs.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
@@ -67,15 +67,17 @@ const FAQ = () => {
               onClick={() => toggleFAQ(index)}
               className="bg-black text-white rounded-md overflow-hidden cursor-pointer transition-all duration-300 border border-gray-800 hover:border-gray-600"
             >
-              <div className="p-6 flex justify-between items-center gap-4">
-                <h3 className={`font-bold text-lg md:text-xl leading-tight transition-colors duration-300 ${isOpen ? 'text-[#26CCC2]' : ''}`}>{faq.question}</h3>
-                <div className={`shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-colors duration-300 ${isOpen ? 'text-[#26CCC2]' : 'text-white'}`}>
-                  {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              <div className="p-4 md:p-6 flex justify-between items-center gap-3 md:gap-4">
+                <h3 className={`font-bold text-base md:text-xl leading-tight transition-colors duration-300 ${isOpen ? 'text-[#26CCC2]' : ''}`}>
+                  {faq.question}
+                </h3>
+                <div className={`shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center transition-colors duration-300 ${isOpen ? 'text-[#26CCC2]' : 'text-white'}`}>
+                  {isOpen ? <Minus className="w-3 h-3 md:w-4 md:h-4" /> : <Plus className="w-3 h-3 md:w-4 md:h-4" />}
                 </div>
               </div>
 
               <div
-                className={`px-6 transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[500px] pb-6 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
+                className={`px-4 md:px-6 transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[500px] pb-4 md:pb-6 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}
               >
                 <div className="text-gray-400 whitespace-pre-line leading-relaxed text-sm md:text-base">
                   {faq.answer}

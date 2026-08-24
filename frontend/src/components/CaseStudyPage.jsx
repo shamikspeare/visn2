@@ -8,12 +8,12 @@ const caseStudyData = {
     description:
       'For Calcutta Bungalow, we reimagined the digital experience by translating its heritage into a refined, contemporary interface. Every element was designed to preserve the warmth of old Calcutta while improving storytelling, navigation, and visual elegance. The result is a timeless experience that reflects the brand\'s cultural legacy with modern clarity.',
     images: [
-      '/Calcutta Bungalow/Dekstop view.png',
-      '/Calcutta Bungalow/Mobile view.png',
-      '/Calcutta Bungalow/trial hero section.png',
-      '/Calcutta Bungalow/Rooms section.jpeg',
-      '/Calcutta Bungalow/Reservation section.jpeg',
-      '/Calcutta Bungalow/Reservation section (Another room type).jpeg',
+      '/Calcutta Bungalow/Dekstop view.webp',
+      '/Calcutta Bungalow/Mobile view.webp',
+      '/Calcutta Bungalow/trial hero section.webp',
+      '/Calcutta Bungalow/Rooms section.webp',
+      '/Calcutta Bungalow/Reservation section.webp',
+      '/Calcutta Bungalow/Reservation section (Another room type).webp',
     ],
   },
   rajbari: {
@@ -21,11 +21,11 @@ const caseStudyData = {
     description:
       'The redesign for Rajbari Bawali draws from the estate\'s regal character and architectural richness to create a calm, immersive digital presence. Thoughtful layouts, restrained typography, and heritage inspired visuals guide visitors through the property\'s story while maintaining a refined and intuitive browsing experience.',
     images: [
-      '/rajbari bawali/rajbari landing page.png',
-      '/rajbari bawali/rajbari booking section.png',
-      '/rajbari bawali/rajbari viewers section.png',
-      '/rajbari bawali/rajbari mobile view.png',
-      '/rajbari bawali/trial mobile view.png',
+      '/rajbari bawali/rajbari landing page.webp',
+      '/rajbari bawali/rajbari booking section.webp',
+      '/rajbari bawali/rajbari viewers section.webp',
+      '/rajbari bawali/rajbari mobile view.webp',
+      '/rajbari bawali/trial mobile view.webp',
     ],
   },
   chaibreak: {
@@ -33,9 +33,9 @@ const caseStudyData = {
     description:
       'We reshaped the website around the experience of discovering cafés, exploring the menu, and finding nearby outlets with ease. A cleaner structure and thoughtful visual treatment give the brand a more inviting online presence while making every interaction feel effortless.',
     images: [
-      '/chai break/chaibreak 1.png',
-      '/chai break/chaibreak 2.png',
-      '/chai break/chaibreak 3.png',
+      '/chai break/chaibreak 1.webp',
+      '/chai break/chaibreak 2.webp',
+      '/chai break/chaibreak 3.webp',
     ],
   },
   healthyco: {
@@ -43,9 +43,9 @@ const caseStudyData = {
     description:
       'A homepage that makes healthy food feel fresh, approachable, and easy to choose. A bright visual language, generous spacing, and clear meal discovery guide users naturally from browsing to placing an order while reflecting the brand\'s focus on everyday nutrition.',
     images: [
-      '/healthy eats co kolkata/landing page.png',
-      '/healthy eats co kolkata/selection page.png',
-      '/healthy eats co kolkata/description page.png',
+      '/healthy eats co kolkata/landing page.webp',
+      '/healthy eats co kolkata/selection page.webp',
+      '/healthy eats co kolkata/description page.webp',
     ],
   },
 };
