@@ -136,11 +136,11 @@ const MobileHero = ({ onBookMeetingClick }) => (
     <div className="relative z-10 min-h-[100svh] w-full px-5">
       <div
         className="absolute left-5 right-5 flex flex-col items-start"
-        style={{ bottom: 'calc(max(18px, env(safe-area-inset-bottom)) + 40px)' }}
+        style={{ bottom: 'calc(max(18px, env(safe-area-inset-bottom)) + clamp(28px, 4.7svh, 48px))' }}
       >
         <h1
           id="mobile-hero-title"
-          className="order-3 mt-[40px] select-none text-left font-sans text-[clamp(31px,9.8vw,42px)] font-bold leading-[0.96] tracking-[-0.04em] text-white"
+          className="order-3 mt-[clamp(20px,3.5svh,40px)] select-none text-left font-sans text-[clamp(31px,9.8vw,42px)] font-bold leading-[0.96] tracking-[-0.04em] text-white"
         >
           <span className="block whitespace-nowrap">Digital Experiences</span>
           <span className="block whitespace-nowrap">
@@ -148,26 +148,26 @@ const MobileHero = ({ onBookMeetingClick }) => (
           </span>
         </h1>
 
-        <div className="order-1 flex w-[200px] flex-col gap-5">
+        <div className="order-1 flex w-[180px] flex-col gap-[clamp(8px,1.4svh,16px)]">
           <button
             type="button"
             onClick={onBookMeetingClick}
-            className="group relative isolate flex h-11 w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-[#26CCC2]/60 bg-[#26CCC2]/[0.18] px-5 font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.24),0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 transition-colors before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-gradient-to-br before:from-white/20 before:via-white/[0.04] before:to-transparent hover:bg-[#26CCC2]/[0.26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#26CCC2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
+            className="group relative isolate flex h-10 w-full items-center justify-center gap-2.5 overflow-hidden rounded-full border border-[#26CCC2]/60 bg-[#26CCC2]/[0.18] px-4 font-sans text-[9px] font-bold uppercase tracking-[0.12em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.24),0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 transition-colors before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-gradient-to-br before:from-white/20 before:via-white/[0.04] before:to-transparent hover:bg-[#26CCC2]/[0.26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#26CCC2] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
           >
             <span className="relative z-10">Book a Meeting</span>
-            <ArrowRight aria-hidden="true" className="relative z-10 h-3.5 w-3.5" />
+            <ArrowRight aria-hidden="true" className="relative z-10 h-3 w-3" />
           </button>
 
           <Link
             to="/work"
-            className="group relative isolate flex h-11 w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-white/20 bg-white/[0.06] px-5 font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 transition-colors before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-gradient-to-br before:from-white/20 before:via-white/[0.035] before:to-transparent hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
+            className="group relative isolate flex h-10 w-full items-center justify-center gap-2.5 overflow-hidden rounded-full border border-white/20 bg-white/[0.06] px-4 font-sans text-[9px] font-bold uppercase tracking-[0.12em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 transition-colors before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-gradient-to-br before:from-white/20 before:via-white/[0.035] before:to-transparent hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
           >
             <span className="relative z-10">Explore Our Work</span>
-            <ArrowRight aria-hidden="true" className="relative z-10 h-3.5 w-3.5" />
+            <ArrowRight aria-hidden="true" className="relative z-10 h-3 w-3" />
           </Link>
         </div>
 
-        <div className="order-2 mt-9 flex w-[170px] select-none flex-col gap-[30px]">
+        <div className="order-2 mt-[clamp(16px,2.8svh,32px)] flex w-[170px] select-none flex-col gap-[clamp(14px,2.35svh,28px)] [text-shadow:0_1px_4px_rgba(0,0,0,0.55)]">
           {MOBILE_STATS.map((stat) => (
             <div
               key={stat.label.join('-')}
