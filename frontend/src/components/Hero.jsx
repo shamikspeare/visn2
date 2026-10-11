@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import MobileFlipGrid from './MobileFlipGrid';
 import TiltedGridHero from './TiltedGridHero';
 
 const CLIENT_WORK = [
@@ -13,15 +12,6 @@ const CLIENT_WORK = [
   { src: '/images/aadi-shakti.webp', alt: 'Aadi Shakti Foundation website', objectPosition: '65% 50%' },
   { src: '/healthy eats co kolkata/selection page.webp', alt: 'Healthy Eats Co product selection', objectPosition: '68% 25%' },
   { src: '/Calcutta Bungalow/Rooms section.webp', alt: 'Calcutta Bungalow rooms experience', objectPosition: '50% 50%' },
-];
-
-const MOBILE_CLIENT_WORK = [
-  CLIENT_WORK[1],
-  CLIENT_WORK[4],
-  CLIENT_WORK[0],
-  CLIENT_WORK[5],
-  CLIENT_WORK[3],
-  CLIENT_WORK[2],
 ];
 
 const MOBILE_STATS = [
@@ -113,20 +103,38 @@ const MobileHero = () => (
   <section
     id="landing-hero"
     aria-labelledby="mobile-hero-title"
-    className="relative isolate w-full overflow-hidden bg-[#0A0A0A] text-white"
+    className="relative isolate min-h-[100svh] w-full overflow-hidden bg-[#0A0A0A] text-white"
   >
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute -right-[8%] top-0 h-[66svh] w-[96vw] max-w-[580px]"
+      className="pointer-events-none absolute -left-[8%] top-0 h-[66svh] w-[96vw] max-w-[580px]"
       style={{
-        background: 'radial-gradient(ellipse 88% 74% at 92% 0%, rgba(91, 35, 255, 0.34) 0%, rgba(91, 35, 255, 0.286) 28%, rgba(69, 6, 147, 0.21) 48%, rgba(27, 8, 52, 0.11) 64%, transparent 80%)',
+        background: 'radial-gradient(ellipse 88% 74% at 8% 0%, rgba(91, 35, 255, 0.411) 0%, rgba(91, 35, 255, 0.347) 28%, rgba(69, 6, 147, 0.254) 48%, rgba(27, 8, 52, 0.133) 64%, transparent 80%), radial-gradient(ellipse 42% 58% at 0% 42%, rgba(91, 35, 255, 0.11) 0%, rgba(69, 6, 147, 0.07) 42%, transparent 76%)',
       }}
     />
 
-    <div className="relative z-10 flex w-full flex-col px-5 pb-[max(18px,env(safe-area-inset-bottom))] pt-[calc(4.25rem+10px)]">
+    <div className="absolute inset-x-0 bottom-0 top-[4.25rem] z-[2] flex justify-end overflow-hidden">
+      <TiltedGridHero
+        images={CLIENT_WORK}
+        speed={6.5}
+        tileHeight={46}
+        aspectRatio={16 / 9}
+        gap={25}
+        axis={80}
+        curve={72}
+        fade={30}
+        orientation="vertical"
+        surface="convex"
+        maxTileWidth={105}
+        edgeBlur={12}
+        className="h-full w-[min(100vw,430px)] shrink-0"
+      />
+    </div>
+
+    <div className="relative z-10 flex min-h-[100svh] w-full flex-col px-5 pb-[max(18px,env(safe-area-inset-bottom))] pt-[4.25rem]">
       <h1
         id="mobile-hero-title"
-        className="mt-[10px] select-none text-left font-sans text-[clamp(27px,8.4vw,36px)] font-bold leading-[0.96] tracking-[-0.04em] text-white"
+        className="mt-[40px] select-none text-left font-sans text-[clamp(31px,9.8vw,42px)] font-bold leading-[0.96] tracking-[-0.04em] text-white"
       >
         <span className="block whitespace-nowrap">Digital Experiences</span>
         <span className="block whitespace-nowrap">
@@ -134,36 +142,29 @@ const MobileHero = () => (
         </span>
       </h1>
 
-      <div className="mt-[clamp(28px,4svh,40px)] flex justify-center">
-        <MobileFlipGrid images={MOBILE_CLIENT_WORK} />
-      </div>
-
-      <div className="mt-[10px]">
-        <div className="mx-auto grid w-[min(calc(100vw-40px),360px)] grid-cols-4 gap-1 select-none">
-          {MOBILE_STATS.map((stat) => (
-            <div
-              key={stat.label.join('-')}
-              role="group"
-              aria-label={`${stat.value}${stat.accent === 'day' ? ' day' : stat.accent} ${stat.label.join(' ')}`}
-              className="min-w-0 text-center"
-            >
-              <p aria-hidden="true" className="font-sans text-[18px] font-bold leading-none text-white/55">
-                {stat.value}
-                <span
-                  className={stat.accent === 'day'
-                    ? 'ml-1 text-[10px] text-[#26CCC2]'
-                    : 'text-[#26CCC2]'}
-                >
-                  {stat.accent}
-                </span>
-              </p>
-              <p aria-hidden="true" className="mt-2 font-sans text-[7px] font-semibold uppercase leading-[1.15] tracking-[0.06em] text-white/35">
-                <span className="block">{stat.label[0]}</span>
-                <span className="block">{stat.label[1]}</span>
-              </p>
-            </div>
-          ))}
-        </div>
+      <div className="mt-[30px] flex w-[170px] select-none flex-col gap-[30px]">
+        {MOBILE_STATS.map((stat) => (
+          <div
+            key={stat.label.join('-')}
+            role="group"
+            aria-label={`${stat.value}${stat.accent === 'day' ? ' day' : stat.accent} ${stat.label.join(' ')}`}
+            className="grid w-full min-w-0 grid-cols-[48px_minmax(0,1fr)] items-center gap-x-2.5 text-left"
+          >
+            <p aria-hidden="true" className="font-sans text-[18px] font-bold leading-none text-white/55">
+              {stat.value}
+              <span
+                className={stat.accent === 'day'
+                  ? 'ml-1 text-[10px] text-[#26CCC2]'
+                  : 'text-[#26CCC2]'}
+              >
+                {stat.accent}
+              </span>
+            </p>
+            <p aria-hidden="true" className="font-sans text-[8px] font-semibold uppercase leading-none tracking-[0.06em] text-white/35">
+              {stat.label.join(' ')}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
