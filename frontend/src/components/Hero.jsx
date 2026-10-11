@@ -142,15 +142,18 @@ const MobileHero = () => (
         </span>
       </h1>
 
-      <div className="mt-[30px] flex w-[170px] select-none flex-col gap-[30px]">
+      <div
+        className="absolute inset-x-0 grid select-none grid-cols-4 gap-1"
+        style={{ bottom: 'calc(max(18px, env(safe-area-inset-bottom)) + 40px)' }}
+      >
         {MOBILE_STATS.map((stat) => (
           <div
             key={stat.label.join('-')}
             role="group"
             aria-label={`${stat.value}${stat.accent === 'day' ? ' day' : stat.accent} ${stat.label.join(' ')}`}
-            className="grid w-full min-w-0 grid-cols-[48px_minmax(0,1fr)] items-center gap-x-2.5 text-left"
+            className="min-w-0 text-center"
           >
-            <p aria-hidden="true" className="font-sans text-[18px] font-bold leading-none text-white/55">
+            <p aria-hidden="true" className="font-sans text-[18px] font-bold leading-none text-white">
               {stat.value}
               <span
                 className={stat.accent === 'day'
@@ -160,8 +163,9 @@ const MobileHero = () => (
                 {stat.accent}
               </span>
             </p>
-            <p aria-hidden="true" className="font-sans text-[8px] font-semibold uppercase leading-none tracking-[0.06em] text-white/35">
-              {stat.label.join(' ')}
+            <p aria-hidden="true" className="mt-2 font-sans text-[7px] font-semibold uppercase leading-[1.15] tracking-[0.06em] text-white">
+              <span className="block">{stat.label[0]}</span>
+              <span className="block">{stat.label[1]}</span>
             </p>
           </div>
         ))}
