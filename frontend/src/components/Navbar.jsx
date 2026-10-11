@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import { motion as Motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import Magnetic from './Magnetic';
 
@@ -28,6 +28,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -75,17 +76,17 @@ const Navbar = () => {
             className="md:hidden relative z-[60] w-10 h-10 flex flex-col items-center justify-center gap-[5px] focus:outline-none"
             aria-label="Toggle menu"
           >
-            <motion.span
+            <Motion.span
               animate={menuOpen ? { rotate: 45, y: 7, backgroundColor: '#000' } : { rotate: 0, y: 0, backgroundColor: '#fff' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="block w-6 h-[2px] rounded-full origin-center"
             />
-            <motion.span
+            <Motion.span
               animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
               transition={{ duration: 0.2 }}
               className="block w-6 h-[2px] rounded-full bg-white origin-center"
             />
-            <motion.span
+            <Motion.span
               animate={menuOpen ? { rotate: -45, y: -7, backgroundColor: '#000' } : { rotate: 0, y: 0, backgroundColor: '#fff' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="block w-6 h-[2px] rounded-full origin-center"
@@ -156,7 +157,7 @@ const Navbar = () => {
         </div>
 
         {/* Scroll Progress Indicator */}
-        <motion.div
+        <Motion.div
           className="h-1 bg-[#26CCC2] w-full origin-left"
           style={{ scaleX }}
         />
@@ -165,14 +166,14 @@ const Navbar = () => {
       {/* ── MOBILE FULLSCREEN MENU OVERLAY ── */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
+          <Motion.div
             className="fixed inset-0 z-[55] flex flex-col justify-center md:hidden px-8 sm:px-12 overflow-hidden"
             initial="closed"
             animate="open"
             exit="closed"
           >
             {/* Reveal circle — scaled via transform (GPU-composited), not clip-path */}
-            <motion.div
+            <Motion.div
               className="absolute rounded-full bg-[#26CCC2]/95 backdrop-blur-md will-change-transform"
               style={{
                 width: origin.diameter,
@@ -195,7 +196,7 @@ const Navbar = () => {
             />
 
             {/* Close Button mirroring the navbar hamburger */}
-            <motion.button
+            <Motion.button
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -204,28 +205,28 @@ const Navbar = () => {
               className="absolute top-3 left-6 sm:left-8 w-10 h-10 flex flex-col items-center justify-center gap-[5px] focus:outline-none z-20 bg-black rounded-full shadow-md"
               aria-label="Close menu"
             >
-              <motion.span
+              <Motion.span
                 initial={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
                 animate={{ rotate: 45, y: 7, backgroundColor: '#fff' }}
                 exit={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="block w-5 h-[2px] rounded-full origin-center"
               />
-              <motion.span
+              <Motion.span
                 initial={{ opacity: 1, scaleX: 1 }}
                 animate={{ opacity: 0, scaleX: 0 }}
                 exit={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: 0.2 }}
                 className="block w-5 h-[2px] rounded-full bg-white origin-center"
               />
-              <motion.span
+              <Motion.span
                 initial={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
                 animate={{ rotate: -45, y: -7, backgroundColor: '#fff' }}
                 exit={{ rotate: 0, y: 0, backgroundColor: '#fff' }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="block w-5 h-[2px] rounded-full origin-center"
               />
-            </motion.button>
+            </Motion.button>
 
             {/* Menu items */}
             <nav className="relative z-10 flex flex-col items-start gap-16 sm:gap-20 mt-20">
@@ -236,7 +237,7 @@ const Navbar = () => {
                   (item.href.includes('#') && location.hash === item.href.replace('/', ''));
 
                 return (
-                  <motion.div
+                  <Motion.div
                     key={item.name}
                     className="w-full"
                     variants={{
@@ -288,11 +289,11 @@ const Navbar = () => {
                         <span className="absolute left-0 -bottom-2 w-full h-[4px] sm:h-[5px] bg-black rounded-r-full rounded-l-full" />
                       )}
                     </Link>
-                  </motion.div>
+                  </Motion.div>
                 );
               })}
             </nav>
-          </motion.div>
+          </Motion.div>
         )}
       </AnimatePresence>
     </>
