@@ -134,7 +134,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={
               <>
-                <Hero isLoaded={isLoaded} onBookMeetingClick={() => setIsContactPopupOpen(true)} />
+                <Hero />
                 <SelectedWorks />
                 <SelectedCaseStudies />
                 <WhyChooseUs onBookMeetingClick={() => setIsContactPopupOpen(true)} />
