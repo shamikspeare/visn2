@@ -133,44 +133,44 @@ const MobileHero = () => (
 
     <div className="relative z-10 min-h-[100svh] w-full px-5">
       <div
-        className="absolute left-5 right-5 flex flex-col items-start"
+        className="absolute left-5 flex w-[170px] select-none flex-col gap-[clamp(28px,4.5svh,48px)] [text-shadow:0_1px_4px_rgba(0,0,0,0.55)]"
+        style={{ top: 'calc(4.25rem + clamp(24px, 4.1svh, 42px))' }}
+      >
+        {MOBILE_STATS.map((stat) => (
+          <div
+            key={stat.label.join('-')}
+            role="group"
+            aria-label={`${stat.value}${stat.accent === 'day' ? ' day' : stat.accent} ${stat.label.join(' ')}`}
+            className="flex min-w-0 flex-col items-start text-left"
+          >
+            <p aria-hidden="true" className="font-sans text-[clamp(20px,5.5vw,24px)] font-bold leading-none text-white">
+              {stat.value}
+              <span
+                className={stat.accent === 'day'
+                  ? 'ml-1 text-[11px] text-[#26CCC2]'
+                  : 'text-[#26CCC2]'}
+              >
+                {stat.accent}
+              </span>
+            </p>
+            <p aria-hidden="true" className="mt-1.5 font-sans text-[9px] font-semibold uppercase leading-[1.15] tracking-[0.08em] text-white">
+              <span className="block">{stat.label[0]}</span>
+              <span className="block">{stat.label[1]}</span>
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <h1
+        id="mobile-hero-title"
+        className="absolute left-5 right-5 select-none text-center font-sans text-[clamp(31px,9.8vw,42px)] font-bold leading-[0.96] tracking-[-0.04em] text-white"
         style={{ bottom: 'calc(max(18px, env(safe-area-inset-bottom)) + clamp(28px, 4.7svh, 48px))' }}
       >
-        <div className="flex w-[170px] select-none flex-col gap-[clamp(28px,4.5svh,48px)] [text-shadow:0_1px_4px_rgba(0,0,0,0.55)]">
-          {MOBILE_STATS.map((stat) => (
-            <div
-              key={stat.label.join('-')}
-              role="group"
-              aria-label={`${stat.value}${stat.accent === 'day' ? ' day' : stat.accent} ${stat.label.join(' ')}`}
-              className="flex min-w-0 flex-col items-start text-left"
-            >
-              <p aria-hidden="true" className="font-sans text-[clamp(20px,5.5vw,24px)] font-bold leading-none text-white">
-                {stat.value}
-                <span
-                  className={stat.accent === 'day'
-                    ? 'ml-1 text-[11px] text-[#26CCC2]'
-                    : 'text-[#26CCC2]'}
-                >
-                  {stat.accent}
-                </span>
-              </p>
-              <p aria-hidden="true" className="mt-1.5 font-sans text-[9px] font-semibold uppercase leading-none tracking-[0.08em] text-white">
-                {stat.label.join(' ')}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <h1
-          id="mobile-hero-title"
-          className="mt-[clamp(44px,6svh,64px)] select-none text-left font-sans text-[clamp(31px,9.8vw,42px)] font-bold leading-[0.96] tracking-[-0.04em] text-white"
-        >
-          <span className="block whitespace-nowrap">Digital Experiences</span>
-          <span className="block whitespace-nowrap">
-            That Grow<span className="text-[#26CCC2]">.</span>
-          </span>
-        </h1>
-      </div>
+        <span className="block whitespace-nowrap">Digital Experiences</span>
+        <span className="block whitespace-nowrap">
+          That Grow<span className="text-[#26CCC2]">.</span>
+        </span>
+      </h1>
     </div>
   </section>
 );
